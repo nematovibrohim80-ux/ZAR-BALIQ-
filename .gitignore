@@ -1,0 +1,22 @@
+# Environment variables
+.env
+
+# Database
+*.db
+database/*.db
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
