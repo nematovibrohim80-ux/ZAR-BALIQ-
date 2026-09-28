@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BARAKA MARKET | Sarxil Mevalar va Oziq-Ovqatlar Do'koni | Tel: 33 354 87 88</title>
+  <meta name="description" content="Eng yangi va tabiiy mevalar: Kosta-Rika Ananasi, Misr Apelsinlari, Ekvador Banani, mahalliy olma, uzum va sabzavotlar. Tezkor yetkazish. Buyurtma: 33 354 87 88">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+            },
+            citrus: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+            },
+            pineapple: {
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- SweetAlert2 CDN for Modern Alerts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-emerald-500 selection:text-white pb-16 md:pb-0">
+
+  <!-- ========================================================
+       1. TEPADAGI E'LON VA TELEFON PANELI (TOPBAR)
+       ======================================================== -->
+  <div class="bg-emerald-900 text-white text-xs py-2 px-4 transition-all">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2 text-center sm:text-left">
+        <span class="bg-emerald-700 text-emerald-200 px-2 py-0.5 rounded text-[11px] font-bold">AKSIYA</span>
+        <span>🚚 150,000 so'mdan ortiq buyurtmalarga yetkazib berish <b>BEPUL</b>!</span>
+      </div>
+      <div class="flex items-center gap-4 text-emerald-100 font-medium">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Har kuni: 08:00 - 22:00</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1.5">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Toshkent shahri va viloyatlar</span>
+        </div>
+        <a href="tel:+998333548788" class="flex items-center gap-1 text-white hover:text-emerald-300 font-bold bg-emerald-800/80 px-2.5 py-0.5 rounded-full transition">
+          <i data-lucide="phone-call" class="w-3 h-3 text-emerald-400"></i>
+          <span>+998 33 354 87 88</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       2. ASOSIY NAVIGATSIYA HEADER
+       ======================================================== -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+        
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 shrink-0 group">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-amber-400 flex items-center justify-center text-2xl shadow-md shadow-emerald-500/20 group-hover:scale-105 transition">
+            🍍
+          </div>
+          <div>
+            <div class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 flex items-center gap-1">
+              <span>BARAKA</span>
+              <span class="text-emerald-600">MARKET</span>
+            </div>
+            <p class="text-[11px] font-semibold text-slate-500 tracking-wider uppercase">Sara Mevalar & Oziq-Ovqat</p>
+          </div>
+        </a>
+
+        <!-- Qidiruv Maydoni (Desktop) -->
+        <div class="hidden lg:flex flex-1 max-w-lg mx-6">
+          <div class="relative w-full">
+            <input type="text" id="search-input" placeholder="Meva yoki oziq-ovqat qidiring (masalan: ananas, apelsin)..." class="w-full bg-slate-100/90 hover:bg-slate-100 focus:bg-white border border-slate-200 focus:border-emerald-500 rounded-2xl py-3 pl-11 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition shadow-inner">
+            <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3.5 top-3.5"></i>
+          </div>
+        </div>
+
+        <!-- Aloqa & Savat Tugmalari -->
+        <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Telefon raqam bloki (Desktop) -->
+          <a href="tel:+998333548788" class="hidden sm:flex items-center gap-3 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-emerald-900 px-4 py-2.5 rounded-2xl transition group">
+            <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow group-hover:scale-110 transition">
+              <i data-lucide="phone" class="w-4 h-4"></i>
+            </div>
+            <div class="text-left">
+              <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Tezkor buyurtma</div>
+              <div class="text-sm font-extrabold text-slate-900 group-hover:text-emerald-700">33 354 87 88</div>
+            </div>
+          </a>
+
+          <!-- Savat tugmasi -->
+          <button onclick="toggleCartDrawer(true)" class="relative flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-600/25 transition">
+            <div class="relative">
+              <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+              <span class="cart-badge-count absolute -top-2.5 -right-2.5 bg-amber-400 text-slate-950 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow hidden">
+                0
+              </span>
+            </div>
+            <span class="hidden sm:inline">Savat:</span>
+            <span class="cart-total-display hidden sm:inline font-extrabold text-amber-200">0 so'm</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Qidiruv Maydoni (Mobile) -->
+      <div class="lg:hidden pb-3">
+        <div class="relative w-full">
+          <input type="text" oninput="searchQuery=this.value; renderProducts();" placeholder="Meva yoki sabzavot qidiring..." class="w-full bg-slate-100 border border-slate-200 focus:border-emerald-500 rounded-xl py-2.5 pl-10 pr-3 text-xs text-slate-800 placeholder-slate-400 outline-none">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       3. HERO BANNER VA TAKLIFLAR
+       ======================================================== -->
+  <section class="relative overflow-hidden pt-6 pb-12 lg:pt-10 lg:pb-16 bg-gradient-to-b from-emerald-50/70 via-white to-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Chap Matn Qismi -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-emerald-100/80 border border-emerald-300 text-emerald-800 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-xs">
+            <span class="flex h-2 w-2 rounded-full bg-emerald-600 animate-ping"></span>
+            <span>Bugungi yangi saralangan hosil yetib keldi!</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
+            Tabiiy & Yangi <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-amber-500">Mevalar</span> va Sifatli Oziq-Ovqatlar
+          </h1>
+
+          <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
+            Shirin <b>Kosta-Rika Ananasi</b>, vitaminlarga boy <b>Apelsinlar</b>, Ekvador bananlari va 30+ dan ortiq sarxil mevalarni to'g'ridan-to'g'ri dasturxoningizga yetkazamiz!
+          </p>
+
+          <!-- Asosiy Harakat Tugmalari -->
+          <div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+            <a href="#products-section" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold px-6 py-4 rounded-2xl shadow-xl shadow-emerald-600/30 transition text-sm">
+              <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+              <span>Mahsulotlarni ko'rish</span>
+            </a>
+
+            <a href="tel:+998333548788" class="flex items-center gap-3 bg-white hover:bg-slate-50 border-2 border-emerald-500 text-slate-900 font-extrabold px-5 py-3.5 rounded-2xl shadow-sm transition text-sm group">
+              <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition">
+                <i data-lucide="phone-call" class="w-4 h-4"></i>
+              </div>
+              <div class="text-left">
+                <div class="text-[10px] text-slate-500 font-bold uppercase">Qo'ng'iroq qiling:</div>
+                <div class="text-sm font-black text-emerald-700">33 354 87 88</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Ishonch belgilari -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-200/80">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-700">100% Tabiiy & Sifatli</span>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                <i data-lucide="truck" class="w-4 h-4"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-700">1-2 soatda yetkazish</span>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center shrink-0">
+                <i data-lucide="badge-percent" class="w-4 h-4"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-700">Hamyonbop narxlar</span>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-700">Har doim yangi hosil</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- O'ng Tomon: Maxsus Meva Vitrinasi (Hero Banner Card) -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative bg-gradient-to-tr from-amber-500 via-orange-400 to-emerald-500 p-1 rounded-3xl shadow-2xl">
+            <div class="bg-white rounded-[22px] p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">🌟 Hafta Tanlovi</span>
+                <span class="text-xs text-slate-400 font-semibold">Toshkent bo'ylab kuryer</span>
+              </div>
+
+              <!-- Ananas & Apelsin Kombo Ko'rgazmasi -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-amber-50/80 rounded-2xl p-3 border border-amber-200/60 text-center hover:scale-102 transition">
+                  <div class="w-full h-28 rounded-xl overflow-hidden mb-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=400&q=80" alt="Ananas" class="w-full h-full object-cover">
+                  </div>
+                  <div class="text-xs font-extrabold text-slate-900 truncate">Oltin Ananas</div>
+                  <div class="text-[11px] text-amber-700 font-bold">45,000 so'm / dona</div>
+                  <button onclick="addToCart(1, 1)" class="w-full mt-2 bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold py-1.5 rounded-lg shadow-sm">
+                    + Savatga
+                  </button>
+                </div>
+
+                <div class="bg-orange-50/80 rounded-2xl p-3 border border-orange-200/60 text-center hover:scale-102 transition">
+                  <div class="w-full h-28 rounded-xl overflow-hidden mb-2 bg-white">
+                    <img src="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=400&q=80" alt="Apelsin" class="w-full h-full object-cover">
+                  </div>
+                  <div class="text-xs font-extrabold text-slate-900 truncate">Shirin Apelsin</div>
+                  <div class="text-[11px] text-orange-700 font-bold">28,000 so'm / kg</div>
+                  <button onclick="addToCart(2, 1)" class="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white text-[11px] font-bold py-1.5 rounded-lg shadow-sm">
+                    + Savatga
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tezkor Telefon orqali buyurtma qutisi -->
+              <div class="bg-slate-900 text-white rounded-2xl p-4 flex items-center justify-between gap-3">
+                <div>
+                  <div class="text-xs text-amber-400 font-bold uppercase tracking-wider">Telefon orqali zakaz bering</div>
+                  <a href="tel:+998333548788" class="text-lg font-black text-white hover:text-emerald-400 transition flex items-center gap-1.5">
+                    <i data-lucide="phone-outgoing" class="w-4 h-4 text-emerald-400"></i>
+                    33 354 87 88
+                  </a>
+                </div>
+                <a href="tel:+998333548788" class="bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-xl shadow-md transition">
+                  <i data-lucide="phone" class="w-5 h-5"></i>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       4. FOYDALANUVCHI SO'ROVI BO'YICHA: ANANAS & APELSIN SHOWCASE
+       ======================================================== -->
+  <section class="py-10 bg-white border-y border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">Maxsus Sara Takliflar</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-2">Dasturxoningiz Qirollari: Ananas & Apelsin</h2>
+        <p class="text-sm text-slate-500 mt-1">Har bir xonadon uchun eng foydali va shirin sitrus hamda tropik mevalar</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Ananas Banner Card -->
+        <div class="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 rounded-3xl p-6 sm:p-8 border border-amber-200/80 shadow-md relative overflow-hidden flex flex-col justify-between">
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-3">
+              <span class="bg-amber-500 text-white text-xs font-black px-3 py-1 rounded-full uppercase">Kosta-Rika Oltin Ananasi</span>
+              <span class="text-amber-700 font-extrabold text-xs">⭐ 5.0 (42 baho)</span>
+            </div>
+
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Shirin & Suvli Tropik Ananas</h3>
+            <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+              Kosta-Rikadan keltirilgan eng shirin ananaslar. Tabiiy bromelayn fermentiga boy bo'lib, yog'larni eritishga va organizmni tozalashga yordam beradi.
+            </p>
+
+            <ul class="text-xs text-slate-700 space-y-1.5 mb-6 font-medium">
+              <li class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> 100% tabiiy pishgan va xushbo'y
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> Kuchli immunitet va C vitamini manbai
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> Telefon orqali zakaz: <b>33 354 87 88</b>
+              </li>
+            </ul>
+          </div>
+
+          <div class="relative z-10 pt-4 border-t border-amber-200/60 flex items-center justify-between gap-4">
+            <div>
+              <span class="text-xs text-slate-500">1 dona narxi:</span>
+              <div class="text-2xl font-black text-amber-700">45,000 so'm</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="addToCart(1, 1)" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                <span>Savatga qo'shish</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apelsin Banner Card -->
+        <div class="bg-gradient-to-br from-orange-50 via-amber-50 to-emerald-50 rounded-3xl p-6 sm:p-8 border border-orange-200/80 shadow-md relative overflow-hidden flex flex-col justify-between">
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-3">
+              <span class="bg-orange-500 text-white text-xs font-black px-3 py-1 rounded-full uppercase">Misr Valencia Apelsini</span>
+              <span class="text-orange-700 font-extrabold text-xs">⭐ 4.9 (68 baho)</span>
+            </div>
+
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Suvli va C Vitaminiga Boy Apelsin</h3>
+            <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+              Misr va Turkiyaning sara bog'laridan keltirilgan shirin va serob apelsinlar. Tonggi yangi siqilgan tabiiy sharbat (fresh) uchun eng zo'r tanlov.
+            </p>
+
+            <ul class="text-xs text-slate-700 space-y-1.5 mb-6 font-medium">
+              <li class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> Bolalar va kattalar uchun C vitamini zaxirasi
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> Yupqa po'stloq, suvli va shirin ta'm
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> To'g'ridan-to'g'ri bog'lanish: <b>33 354 87 88</b>
+              </li>
+            </ul>
+          </div>
+
+          <div class="relative z-10 pt-4 border-t border-orange-200/60 flex items-center justify-between gap-4">
+            <div>
+              <span class="text-xs text-slate-500">1 kg narxi:</span>
+              <div class="text-2xl font-black text-orange-600">28,000 so'm</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="addToCart(2, 1)" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                <span>Savatga qo'shish</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       5. ASOSIY MAHSULOTLAR KATALOGI VA FILTRLAR
+       ======================================================== -->
+  <section id="products-section" class="py-12 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Sarlavha va Saralash -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 bg-emerald-100/60 px-3 py-1 rounded-full">Katalog</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-2">Bozorimiz Rastasi</h2>
+          <p class="text-sm text-slate-500 mt-1" id="products-count-badge">Barcha mahsulotlar yuklanmoqda...</p>
+        </div>
+
+        <!-- Saralash Dropdowni -->
+        <div class="flex items-center gap-3">
+          <label for="sort-select" class="text-xs font-bold text-slate-500 shrink-0">Saralash:</label>
+          <select id="sort-select" class="bg-white border border-slate-200 text-slate-800 text-xs font-bold rounded-xl px-3 py-2.5 outline-none focus:border-emerald-500 shadow-xs cursor-pointer">
+            <option value="popular">Tavsiya etilganlar (Mashhur)</option>
+            <option value="price-low">Narx: Arzondan qimmatga</option>
+            <option value="price-high">Narx: Qimmatdan arzonga</option>
+            <option value="name">Alifbo bo'yicha (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Kategoriya Tugmalari (Filter Pills) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none mb-8">
+        <button class="category-filter-btn active shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold bg-emerald-600 text-white shadow-md transition flex items-center gap-2" data-category="all">
+          <span>🍓</span>
+          <span>Barchasi</span>
+        </button>
+
+        <button class="category-filter-btn shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-emerald-400 transition flex items-center gap-2" data-category="tropical">
+          <span>🍍</span>
+          <span>Tropik Mevalar (Ananas, Banan...)</span>
+        </button>
+
+        <button class="category-filter-btn shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-emerald-400 transition flex items-center gap-2" data-category="citrus">
+          <span>🍊</span>
+          <span>Sitrus Mevalar (Apelsin, Limon...)</span>
+        </button>
+
+        <button class="category-filter-btn shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-emerald-400 transition flex items-center gap-2" data-category="fruits">
+          <span>🍎</span>
+          <span>Bog' Mevalari (Olma, Uzum, Nok...)</span>
+        </button>
+
+        <button class="category-filter-btn shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-emerald-400 transition flex items-center gap-2" data-category="vegetables">
+          <span>🥕</span>
+          <span>Yangi Sabzavotlar</span>
+        </button>
+
+        <button class="category-filter-btn shrink-0 px-4 py-2.5 rounded-2xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:border-emerald-400 transition flex items-center gap-2" data-category="dried">
+          <span>🥜</span>
+          <span>Quruq Mevalar & Yong'oq</span>
+        </button>
+      </div>
+
+      <!-- Mahsulotlar Kartalari Setkasi (Grid) -->
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- JavaScript orqali to'ldiriladi -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       6. BUYURTMA VA TEZKOR QO'NG'IROQ BO'LIMI
+       ======================================================== -->
+  <section class="py-14 bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-900 text-white relative overflow-hidden">
+    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-4">
+          <span class="bg-amber-400 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+            Tezkor Bog'lanish
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
+            Savollaringiz bormi yoki telefonda zakaz bermoqchimisiz?
+          </h2>
+          <p class="text-emerald-100 text-sm sm:text-base leading-relaxed">
+            Bizning operatorimiz har kuni 08:00 dan 22:00 gacha xizmatingizda. Istalgan mevalarni grammigacha tanlab, eshigingizgacha yetkazib beramiz!
+          </p>
+
+          <div class="pt-4 flex flex-wrap items-center gap-4">
+            <a href="tel:+998333548788" class="inline-flex items-center gap-3 bg-white text-emerald-900 hover:bg-emerald-50 px-6 py-4 rounded-2xl font-black text-lg shadow-xl hover:scale-105 transition">
+              <i data-lucide="phone-call" class="w-6 h-6 text-emerald-600"></i>
+              <span>+998 33 354 87 88</span>
+            </a>
+
+            <a href="https://t.me/share/url?url=Assalomu%20alaykum!%20Baraka%20Marketdan%20buyurtma%20bermoqchiman&text=333548788" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600/60 hover:bg-emerald-600 border border-emerald-400 text-white px-5 py-4 rounded-2xl font-bold text-sm transition">
+              <i data-lucide="send" class="w-5 h-5 text-emerald-200"></i>
+              <span>Telegram orqali yozish</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Qayta Qo'ng'iroq So'rash Formasi -->
+        <div class="lg:col-span-5 bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl">
+          <h3 class="text-lg font-black text-slate-900 mb-1">Biz sizga qo'ng'iroq qilamiz!</h3>
+          <p class="text-xs text-slate-500 mb-4">Raqamingizni qoldiring, 3 daqiqada bepul aloqaga chiqamiz.</p>
+
+          <form onsubmit="handleCallbackRequest(event)" class="space-y-3">
+            <div>
+              <label for="callback-phone" class="block text-xs font-bold text-slate-700 mb-1">Telefon raqamingiz:</label>
+              <input type="tel" id="callback-phone" placeholder="+998 (90) 123-45-67" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition">
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/25 transition text-sm flex items-center justify-center gap-2">
+              <i data-lucide="phone-outgoing" class="w-4 h-4"></i>
+              <span>Menga qo'ng'iroq qiling</span>
+            </button>
+          </form>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-500"></i>
+            <span>Raqamingiz maxfiy saqlanadi</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================
+       7. BIZNING AFZALLIKLARIMIZ
+       ======================================================== -->
+  <section class="py-14 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Nega Mijozlar Bizni Tanlashadi?</h2>
+        <p class="text-sm text-slate-500 mt-1">Sifat, ishonch va halollik — bizning oliy qoidamiz</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 text-center hover:bg-emerald-50/50 hover:border-emerald-200 transition">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl">
+            🌿
+          </div>
+          <h3 class="text-base font-bold text-slate-900 mb-1">100% Saralangan & Yangi</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Meva va sabzavotlar har kuni erta tongda saralanadi. Chirigan yoki noxush mahsulotlar umuman qo'shilmaydi.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 text-center hover:bg-amber-50/50 hover:border-amber-200 transition">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl">
+            🚀
+          </div>
+          <h3 class="text-base font-bold text-slate-900 mb-1">Tezkor Eshikkacha Yetkazish</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Buyurtma berganingizdan so'ng 1-2 soat ichida buyurtmangiz xonadoningizga yetib boradi.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 text-center hover:bg-orange-50/50 hover:border-orange-200 transition">
+          <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center text-2xl">
+            🤝
+          </div>
+          <h3 class="text-base font-bold text-slate-900 mb-1">To'liq Kafolat</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Agar keltirilgan meva yoki oziq-ovqat sizga yoqmasa, uni so'zsiz almashtirib beramiz yoki pulingizni qaytaramiz.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       8. FOOTER (PASTKI QISM)
+       ======================================================== -->
+  <footer class="bg-slate-900 text-slate-300 pt-12 pb-8 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-800">
+        
+        <!-- Brend haqida -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-amber-400 flex items-center justify-center text-xl">
+              🍍
+            </div>
+            <span class="text-xl font-black text-white">BARAKA MARKET</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Ananas, apelsin, banan va barcha turdagi tabiiy saralangan meva va oziq-ovqat mahsulotlarini yetkazib berish xizmati.
+          </p>
+          <div class="text-xs text-emerald-400 font-bold">
+            Biz bilan sog'lom va to'yimli hayot!
+          </div>
+        </div>
+
+        <!-- Aloqa Ma'lumotlari -->
+        <div class="space-y-2">
+          <h4 class="text-sm font-extrabold text-white uppercase tracking-wider mb-3">Aloqa & Buyurtma</h4>
+          <div class="space-y-2.5 text-xs">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="phone" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <div>
+                <div class="text-slate-400">Buyurtma telefoni:</div>
+                <a href="tel:+998333548788" class="font-bold text-white hover:text-emerald-400 text-sm transition">+998 33 354 87 88</a>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="clock" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <div>
+                <div class="text-slate-400">Ish vaqti:</div>
+                <div class="text-slate-200 font-medium">Har kuni: 08:00 — 22:00</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+              <div>
+                <div class="text-slate-400">Manzil:</div>
+                <div class="text-slate-200 font-medium">Toshkent shahri, Dehqon bozori qatori</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mevalar Menyusi -->
+        <div>
+          <h4 class="text-sm font-extrabold text-white uppercase tracking-wider mb-3">Mashhur Mevalar</h4>
+          <ul class="space-y-1.5 text-xs text-slate-400">
+            <li><a href="#products-section" class="hover:text-emerald-400 transition">🍍 Oltin Ananas (Kosta-Rika)</a></li>
+            <li><a href="#products-section" class="hover:text-emerald-400 transition">🍊 Shirin Apelsin (Valencia)</a></li>
+            <li><a href="#products-section" class="hover:text-emerald-400 transition">🍌 Ekvador Banani</a></li>
+            <li><a href="#products-section" class="hover:text-emerald-400 transition">🍎 Namangan Qizil Olmasi</a></li>
+            <li><a href="#products-section" class="hover:text-emerald-400 transition">🍇 Kishmish Urug'siz Uzum</a></li>
+            <li><a href="#products-section" class="hover:text-emerald-400 transition">🍓 Saralangan Qulupnay</a></li>
+          </ul>
+        </div>
+
+        <!-- To'lov va Ishonch -->
+        <div class="space-y-3">
+          <h4 class="text-sm font-extrabold text-white uppercase tracking-wider mb-3">To'lov Turlari</h4>
+          <p class="text-xs text-slate-400">Sizga qulay istalgan usulda to'lang:</p>
+          <div class="flex flex-wrap gap-2 text-xs font-bold">
+            <span class="bg-slate-800 text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700">Naqd pul</span>
+            <span class="bg-slate-800 text-emerald-400 px-2.5 py-1.5 rounded-lg border border-slate-700">Click</span>
+            <span class="bg-slate-800 text-teal-400 px-2.5 py-1.5 rounded-lg border border-slate-700">Payme</span>
+            <span class="bg-slate-800 text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700">Humo / UzCard</span>
+          </div>
+          <div class="pt-2">
+            <a href="tel:+998333548788" class="inline-flex items-center gap-2 text-xs font-bold text-emerald-400 hover:underline">
+              <span>Savollar bormi? Qo'ng'iroq qiling &rarr;</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+        <p>© 2026 BARAKA MARKET. Barcha huquqlar himoyalangan. Telefon: 33 354 87 88</p>
+        <p>Yangi va tabiiy mahsulotlar yetkazib berish xizmati</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================
+       9. SAVAT DRAWERI (SLIDE-OVER PANEL)
+       ======================================================== -->
+  <div id="cart-backdrop" onclick="toggleCartDrawer(false)" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 transition-opacity hidden"></div>
+
+  <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+    
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+        </div>
+        <h3 class="font-black text-slate-900 text-base">Xarid Savati</h3>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="clearCart()" class="text-xs text-rose-500 hover:text-rose-700 font-bold px-2 py-1" title="Savatni tozalash">
+          Tozalash
+        </button>
+        <button onclick="toggleCartDrawer(false)" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bepul Yetkazish Progress bari -->
+    <div id="cart-free-shipping-progress" class="px-5 pt-3"></div>
+
+    <!-- Mahsulotlar Ro'yxati -->
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3">
+      <!-- JavaScript to'ldiradi -->
+    </div>
+
+    <!-- Bo'sh Savat Holati -->
+    <div id="cart-empty-state" class="flex-1 flex flex-col items-center justify-center p-8 text-center hidden">
+      <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-4xl mb-4">
+        🛒
+      </div>
+      <h4 class="font-extrabold text-slate-800 text-base mb-1">Savatingiz hozircha bo'sh</h4>
+      <p class="text-xs text-slate-500 mb-6 max-w-xs">Bizning shirin ananas, apelsin va mevalarimizdan tanlab savatga qo'shing!</p>
+      <button onclick="toggleCartDrawer(false)" class="bg-emerald-600 text-white text-xs font-bold px-5 py-3 rounded-xl hover:bg-emerald-700 transition">
+        Xaridni boshlash
+      </button>
+    </div>
+
+    <!-- Pastki Xulosa va Buyurtma Tugmasi -->
+    <div id="cart-summary-block" class="p-5 bg-slate-50 border-t border-slate-200 space-y-3">
+      <div class="space-y-1.5 text-xs">
+        <div class="flex justify-between text-slate-500">
+          <span>Mahsulotlar qiymati:</span>
+          <span id="cart-subtotal" class="font-bold text-slate-800">0 so'm</span>
+        </div>
+        <div class="flex justify-between text-slate-500">
+          <span>Yetkazib berish:</span>
+          <span id="cart-delivery-cost" class="font-bold text-emerald-600">BEPUL</span>
+        </div>
+        <div class="flex justify-between text-sm pt-2 border-t border-slate-200 font-black text-slate-900">
+          <span>Jami to'lov:</span>
+          <span id="cart-final-total" class="text-emerald-700 text-base">0 so'm</span>
+        </div>
+      </div>
+
+      <button onclick="openCheckoutModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-extrabold py-3.5 rounded-2xl shadow-lg shadow-emerald-600/25 transition text-sm flex items-center justify-center gap-2">
+        <i data-lucide="check-circle" class="w-4 h-4"></i>
+        <span>Buyurtmani rasmiylashtirish</span>
+      </button>
+
+      <div class="text-center">
+        <a href="tel:+998333548788" class="text-[11px] text-slate-500 hover:text-emerald-700 font-bold inline-flex items-center gap-1">
+          <i data-lucide="phone" class="w-3 h-3 text-emerald-600"></i>
+          <span>Yoki operatorga qo'ng'iroq qiling: <b>33 354 87 88</b></span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       10. CHECKOUT MODAL (BUYURTMA FORMASI)
+       ======================================================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative">
+      
+      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="mb-5">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md">Tasdiqlash</span>
+        <h3 class="text-xl font-black text-slate-900 mt-1">Buyurtmani Rasmiylashtirish</h3>
+        <p class="text-xs text-slate-500">Ma'lumotlaringizni kiriting, kuryerimiz tezda yo'lga chiqadi</p>
+      </div>
+
+      <!-- Xarid qilingan mahsulotlar qisqacha ro'yxati -->
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 mb-5">
+        <div class="text-xs font-bold text-slate-500 uppercase mb-2">Buyurtma tarkibi:</div>
+        <div id="checkout-items-summary" class="max-h-32 overflow-y-auto space-y-1 mb-2 pr-1">
+          <!-- JS orqali to'ldiriladi -->
+        </div>
+        <div class="pt-2 border-t border-slate-200 flex justify-between items-center text-xs font-bold">
+          <span class="text-slate-600">Umumiy summa:</span>
+          <span id="checkout-total-sum" class="text-emerald-700 font-extrabold text-sm">0 so'm</span>
+        </div>
+      </div>
+
+      <form onsubmit="handleOrderSubmit(event)" class="space-y-4">
+        <div>
+          <label for="order-name" class="block text-xs font-bold text-slate-700 mb-1">Ism va familiyangiz *</label>
+          <input type="text" id="order-name" required placeholder="Masalan: Sardor Aliyev" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition">
+        </div>
+
+        <div>
+          <label for="order-phone" class="block text-xs font-bold text-slate-700 mb-1">Telefon raqamingiz *</label>
+          <input type="tel" id="order-phone" required placeholder="+998 (90) 123-45-67" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition">
+        </div>
+
+        <div>
+          <label for="order-address" class="block text-xs font-bold text-slate-700 mb-1">Yetkazib berish manzili *</label>
+          <textarea id="order-address" required rows="2" placeholder="Shahar, tuman, ko'cha, uy va xonadon raqami" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition resize-none"></textarea>
+        </div>
+
+        <!-- To'lov usuli -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">To'lov turi</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold text-slate-700 hover:border-emerald-500">
+              <input type="radio" name="payment-method" value="Naqd pul" checked class="text-emerald-600 focus:ring-emerald-500">
+              <span>💵 Naqd pul</span>
+            </label>
+
+            <label class="flex items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold text-slate-700 hover:border-emerald-500">
+              <input type="radio" name="payment-method" value="Click / Payme" class="text-emerald-600 focus:ring-emerald-500">
+              <span>💳 Click/Payme</span>
+            </label>
+
+            <label class="flex items-center gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold text-slate-700 hover:border-emerald-500">
+              <input type="radio" name="payment-method" value="Karta (Terminal)" class="text-emerald-600 focus:ring-emerald-500">
+              <span>📟 Karta</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label for="order-note" class="block text-xs font-bold text-slate-700 mb-1">Kuryerga qo'shimcha eslatma (ixtiyoriy)</label>
+          <input type="text" id="order-note" placeholder="Masalan: Domofon kodi 45, tezroq keling" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition">
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-extrabold py-3.5 rounded-2xl shadow-lg shadow-emerald-600/25 transition text-sm flex items-center justify-center gap-2 mt-2">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>Buyurtmani Tasdiqlash</span>
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <p class="text-[11px] text-slate-400">
+          Shoshilinch buyurtma bo'lsa: <a href="tel:+998333548788" class="text-emerald-600 font-bold underline">33 354 87 88</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       11. QUICK VIEW MODAL (MAHSULOT BATAFSIL)
+       ======================================================== -->
+  <div id="quick-view-modal" class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+      <button onclick="closeQuickView()" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-white/90 shadow text-slate-600 hover:text-slate-900 flex items-center justify-center transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div id="quick-view-body">
+        <!-- JS to'ldiradi -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       12. SUZUVCHI TUGMALAR (FLOATING CALL & CART)
+       ======================================================== -->
+  <!-- Qo'ng'iroq qilish tugmasi -->
+  <div class="fixed bottom-6 left-6 z-40">
+    <a href="tel:+998333548788" class="relative phone-ring-btn flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-full shadow-2xl transition hover:scale-105 group" title="Bizga qo'ng'iroq qiling: 33 354 87 88">
+      <i data-lucide="phone-call" class="w-5 h-5 animate-bounce"></i>
+      <span class="text-xs font-black tracking-wide hidden sm:inline">33 354 87 88</span>
+    </a>
+  </div>
+
+  <!-- Mobil pastki Savat Tugmasi -->
+  <div class="md:hidden fixed bottom-6 right-6 z-40">
+    <button onclick="toggleCartDrawer(true)" class="relative flex items-center justify-center w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-2xl transition active:scale-95">
+      <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+      <span class="cart-badge-count absolute -top-1 -right-1 bg-amber-400 text-slate-950 text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow hidden">
+        0
+      </span>
+    </button>
+  </div>
+
+  <!-- JavaScript Fayllar -->
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

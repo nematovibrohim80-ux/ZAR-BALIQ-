@@ -1,86 +1,47 @@
-# 🐟 ZAR BALIQ Choyxonasi — Rasmiy Telegram Boti 🥟
+# 🍍 BARAKA MARKET — Oziq-ovqat va Meva Do'koni Web Sayti
 
-**"ZAR BALIQ"** choyxonasi uchun maxsus ishlab chiqilgan, 100% sof va tushunarli o'zbek tilidagi rasmiy Telegram boti.
+Zamonaviy, qulay va interaktiv oziq-ovqat hamda mevalar onlayn do'koni.
 
-Bot Python dasturlash tilida, zamonaviy va asinxron **aiogram 3.x** hamda **aiosqlite** ma'lumotlar bazasi asosida yaratilgan.
-
----
-
-## 🌟 Asosiy Bo'limlar va Imkoniyatlar
-
-### 1. Asosiy Menyu (Tugmalar ko'rinishida)
-* **🥟 Somsa narxlari** — ZAR BALIQning mashhur maxsus baliqli somsasi, go'shtli tandir somsa, pishloqli va qatlama somsalar menyusi va narxlari.
-* **🐟 Baliq narxlari** — Qarsildoq qovurilgan Sazan (zog'ora baliq), parhezbop Sudak, shirin Oq Amur, sara Forel hamda katta davralar uchun shohona "ZAR BALIQ Assorti" patnislari narxlari.
-* **📍 Manzil** — Choyxona joylashgan aniq manzil, mo'ljal, ish vaqti, bepul avtoturargoh ma'lumotlari hamda Telegram xarita lokatsiyasi (Yandex Xarita / Google Maps tugmalari).
-* **📞 Bog'lanish** — Bog'lanish telefon raqami (`33-355-87-77`), bir bosishda qo'ng'iroq qilish tugmasi va buyurtma berish.
-* **🛒 Buyurtma berish** — Taomni va miqdorini tanlash, yetkazib berish yoki olib ketishni belgilash, buyurtmani rasmiylashtirish.
-* **ℹ️ Biz haqimizda** — Choyxona tarixi va taomlar tayyorlanishi haqida ma'lumot.
+## 📞 Aloqa ma'lumotlari:
+- **Telefon raqam:** `+998 33 354 87 88` (yoki `33-354-87-88`)
+- **Ish vaqti:** Har kuni 08:00 dan 22:00 gacha
+- **Yetkazib berish:** Toshkent shahri va viloyatlar bo'ylab 1-2 soat ichida
 
 ---
 
-### 2. Start Xabari
-`/start` bosilganda bot chiroyli va samimiy kutib olish xabarini chiqaradi:
-> *"Assalomu alaykum! 'ZAR BALIQ' choyxonasining rasmiy botiga xush kelibsiz! 🐟🥟"*
+## 🌟 Sayt imkoniyatlari:
+1. **Meva va Mahsulotlar Katalogi:**
+   - 🍍 **Oltin Ananas (Kosta-Rika)** — alohida vitrina va maxsus taklif
+   - 🍊 **Valencia Apelsinlari (Misr / Turkiya)** — C vitamini ombori
+   - 🍌 Ekvador Banani
+   - 🍎 Namangan qizil olma va Golden olmalari
+   - 🍐 Konferens noki
+   - 🍇 Kishmish urug'siz qora uzum
+   - 🍓 Saralangan yangi qulupnay
+   - 🍉 Jizzax shirin tarvuzi va Mirzacho'l qovuni
+   - 🍒 Sara go'shtdor gilos, shaftoli, anor, kivi, mango, limon
+   - 🥕 Pomidor, bodring, sabzi, kartoshka va quruq mevalar (mayiz, yong'oq)
+
+2. **Interaktiv Xarid Savati (Cart Drawer):**
+   - Mahsulotlarni kg va dona bo'yicha tanlash
+   - Miqdorni oshirish/kamaytirish (+ / -)
+   - Narxlar va umumiy summani avtomatik hisoblash
+   - 150,000 so'mdan oshganda **bepul yetkazib berish** ko'rsatkichi (progress bar)
+   - Xaridlarni `localStorage` da xotirada saqlash
+
+3. **Buyurtma berish (Checkout) & Tezkor Aloqa:**
+   - Onlayn buyurtma shakli (Ism, telefon, manzil, to'lov turi)
+   - Telegram orqali operatorga tayyor buyurtma yuborish
+   - `+998 33 354 87 88` raqamiga to'g'ridan-to'g'ri bir bosishda qo'ng'iroq qilish
+   - "Menga qo'ng'iroq qiling" (Qayta aloqa formasi)
+
+4. **Filtrlash va Jonli Qidiruv:**
+   - Kategoriyalar bo'yicha saralash (Tropik mevalar, Sitrus, Bog' mevalari, Sabzavotlar, Quruq mevalar)
+   - Tezkor qidiruv (Live search)
+   - Narx bo'yicha saralash (Arzondan qimmatga, Qimmatdan arzonga)
 
 ---
 
-### 3. Taomlar va Narxlar Ro'yxati (Boshlang'ich Menyusi)
-
-#### 🥟 Somsalar:
-* **🥟 Maxsus Baliqli Somsa** — 20 000 so‘m / dona
-* **🥩 Go'shtli Tandir Somsa** — 18 000 so‘m / dona
-* **🧀 Pishloqli va Tovuqli Somsa** — 16 000 so‘m / dona
-* **🥟 Qatlama Tandir Somsa** — 15 000 so‘m / dona
-
-#### 🐟 Baliq Taomlari:
-* **🐟 Sazan (Zog'ora baliq)** — 90 000 so‘m (1 kg)
-* **🐟 Sudak (Oq baliq)** — 120 000 so‘m (1 kg)
-* **🐟 Oq Amur (Tolstolob)** — 85 000 so‘m (1 kg)
-* **🐟 Forel (Xonbaliq)** — 75 000 so‘m (1 dona)
-* **👑 ZAR BALIQ Assorti (Patnis)** — 350 000 so‘m (katta davralar uchun)
-
----
-
-### 4. Administrator Imkoniyatlari
-* **Avtomatik birinchi admin:** Botga birinchi bo'lib `/start` yoki `/setadmin` yuborgan foydalanuvchi avtomatik ravishda bosh administrator bo'ladi.
-* **Yangi buyurtmalar nazorati:** Har bir mijoz buyurtma berganda, admin(lar)ga darhol bildirishnoma boradi. Unda:
-  - `✅ Qabul qilish` va `❌ Rad etish` tugmalari
-  - Mijoz bilan bir bosishda bog'lanish (Telegram profil yoki Telefon)
-* **Admin Panel (`/admin`):**
-  - Taomlar narxini o'zgartirish, yangi taom qo'shish, faolsizlantirish.
-  - Telefon raqami, manzil va yetkazib berish narxini bot ichidan o'zgartirish.
-  - Barcha mijozlarga ommaviy reklama / xabar tarqatish (Broadcast).
-  - Statistika ko'rish (mijozlar soni, buyurtmalar soni va jami tushum).
-
----
-
-## 🚀 Botni Ishga Tushirish
-
-### 1. Talablar
-Kompyuterda **Python 3.10+** o'rnatilgan bo'lishi kerak.
-
-Kutubxonalarni o'rnatish:
-```bash
-py -m pip install -r requirements.txt
-```
-
-### 2. Sozlamalar (.env)
-`.env` faylida barcha sozlamalar kiritilgan:
-```env
-BOT_TOKEN=8665630444:AAFzII6PrF5M4osOOaN9yjOgN13935xgFGg
-PHONE_NUMBER=33-355-87-77
-ADDRESS_TEXT=Toshkent viloyati, Yangiyo'l tumani, Katta O'zbekiston trakti bo'yida ("ZAR BALIQ" choyxonasi)\nMo'ljal: Katta yo'l yoqasida, "ZAR BALIQ" yorqin stendi va baliq ramzi yonida
-DEFAULT_DELIVERY_PRICE=20000
-```
-
-### 3. Mantiqiy testlarni tekshirish
-```bash
-py test_bot_logic.py
-```
-
-### 4. Botni ishga tushirish
-```bash
-py bot.py
-```
-
-Bot ishga tushgach, Telegram qidiruvidan o'z botingizni oching va `/start` bosing!
+## 🚀 Saytni ishga tushirish:
+1. `start_market.bat` fayliga sichqoncha bilan ikki marta bosing (Avtomatik brauzerda ochiladi).
+2. Yoki to'g'ridan-to'g'ri `index.html` faylini istalgan brauzerda (Chrome, Edge) oching.
