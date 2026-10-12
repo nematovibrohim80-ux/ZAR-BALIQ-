@@ -5,8 +5,10 @@ aiogram 3.x asosidagi Ingliz tili va barcha fanlar bo'yicha Sun'iy Intellektli U
 
 import asyncio
 import logging
+import os
 import sys
 
+from aiohttp import web
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
@@ -62,10 +64,34 @@ async def set_default_commands(bot: Bot):
         logger.warning(f"Profil ma'lumotlarini o'rnatishda ogohlantirish: {e}")
 
 
+async def start_web_server():
+    """Render Web Service yoki monitoring uchun fon rejimida portni tinglash."""
+    port = int(os.getenv("PORT", "8080"))
+    app = web.Application()
+
+    async def ping_handler(request):
+        return web.Response(text="Bot is running 24/7!", status=200)
+
+    app.router.add_get("/", ping_handler)
+    app.router.add_get("/health", ping_handler)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    logger.info(f"Render health-check veb-server {port}-portda muvaffaqiyatli ishga tushirildi.")
+
+
 async def main():
     if not BOT_TOKEN:
         logger.error(".env faylida BOT_TOKEN ko'rsatilmagan!")
         return
+
+    # Render uchun veb-serverni ishga tushirish (agar PORT mavjud bo'lsa)
+    try:
+        await start_web_server()
+    except Exception as e:
+        logger.warning(f"Web-serverni ishga tushirishda ogohlantirish: {e}")
 
     # Ma'lumotlar bazasini tayyorlash
     logger.info("Ma'lumotlar bazasi initsializatsiya qilinmoqda...")
