@@ -508,8 +508,48 @@ function closeCheckoutModal() {
   }
 }
 
+// HTML belgilarini xavfsiz formatlash (Telegram HTML parse mode uchun)
+function escapeHtml(text) {
+  if (!text) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Telegram adminlariga avtomatik xabar jo'natish
+async function sendToTelegramAdmins(messageText) {
+  const token = STORE_CONFIG.botToken;
+  const adminIds = STORE_CONFIG.adminChatIds || [];
+  if (!token || adminIds.length === 0) return;
+
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+  const promises = adminIds.map(chatId => {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: messageText,
+        parse_mode: 'HTML'
+      })
+    })
+    .then(res => res.json())
+    .catch(err => {
+      console.warn("Telegramga yuborishda xatolik (chat: " + chatId + "):", err);
+    });
+  });
+
+  return Promise.allSettled(promises);
+}
+
 // Buyurtmani jo'natish (Submit Order)
-function handleOrderSubmit(e) {
+async function handleOrderSubmit(e) {
   e.preventDefault();
 
   const nameInput = document.getElementById('order-name');
@@ -525,33 +565,71 @@ function handleOrderSubmit(e) {
   const paymentMethod = paymentMethodInput ? paymentMethodInput.value : 'Naqd pul';
 
   if (!customerName || !customerPhone || !customerAddress) {
-    alert("Iltimos, Ismingiz, Telefon raqamingiz va Manzilingizni to'ldiring!");
+    if (window.Swal) {
+      Swal.fire({
+        icon: 'warning',
+        title: "Ma'lumotlar to'liq emas",
+        text: "Iltimos, Ismingiz, Telefon raqamingiz va Manzilingizni to'ldiring!",
+        confirmButtonColor: '#10b981'
+      });
+    } else {
+      alert("Iltimos, Ismingiz, Telefon raqamingiz va Manzilingizni to'ldiring!");
+    }
     return;
   }
 
-  const summary = getCartSummary();
-  const orderNumber = "BF-" + Math.floor(100000 + Math.random() * 900000);
+  // Tugmani yuklanish holatiga o'tkazish
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      <span>Buyurtma yuborilmoqda...</span>
+    `;
+  }
 
-  // Telegram xabari formatini tayyorlash
-  let orderMessage = `🛒 YANGI BUYURTMA #${orderNumber}\n\n`;
-  orderMessage += `👤 Xaridor: ${customerName}\n`;
-  orderMessage += `📞 Telefon: ${customerPhone}\n`;
-  orderMessage += `📍 Manzil: ${customerAddress}\n`;
-  orderMessage += `💳 To'lov turi: ${paymentMethod}\n`;
-  if (notes) orderMessage += `📝 Izoh: ${notes}\n`;
-  orderMessage += `\n📦 MAHSULOTLAR RO'YXATI:\n`;
+  const summary = getCartSummary();
+  const orderNumber = "BM-" + Math.floor(100000 + Math.random() * 900000);
+  const nowStr = new Date().toLocaleString('uz-UZ');
+
+  // Telegram HTML xabari formatini tayyorlash
+  let tgMessage = `🛒 <b>YANGI BUYURTMA #${orderNumber}</b>\n\n`;
+  tgMessage += `👤 <b>Xaridor:</b> ${escapeHtml(customerName)}\n`;
+  tgMessage += `📞 <b>Telefon:</b> <code>${escapeHtml(customerPhone)}</code>\n`;
+  tgMessage += `📍 <b>Manzil:</b> ${escapeHtml(customerAddress)}\n`;
+  tgMessage += `💳 <b>To'lov turi:</b> ${escapeHtml(paymentMethod)}\n`;
+  if (notes) {
+    tgMessage += `📝 <b>Izoh:</b> <i>${escapeHtml(notes)}</i>\n`;
+  }
+  tgMessage += `\n📦 <b>BUYURTMA TARKIBI:</b>\n`;
 
   cart.forEach((item, idx) => {
-    orderMessage += `${idx + 1}. ${item.name} — ${item.quantity} ${item.unit} x ${formatPrice(item.price)} = ${formatPrice(item.price * item.quantity)}\n`;
+    tgMessage += `${idx + 1}. <b>${escapeHtml(item.name)}</b> — ${item.quantity} ${item.unit} x ${formatPrice(item.price)} = <b>${formatPrice(item.price * item.quantity)}</b>\n`;
   });
 
-  orderMessage += `\n💵 Mahsulotlar: ${formatPrice(summary.subtotal)}\n`;
-  orderMessage += `🚚 Yetkazib berish: ${summary.isFreeDelivery ? 'BEPUL' : formatPrice(summary.deliveryFee)}\n`;
-  orderMessage += `💰 JAMI TO'LOV: ${formatPrice(summary.total)}\n`;
+  tgMessage += `\n💵 <b>Mahsulotlar:</b> ${formatPrice(summary.subtotal)}\n`;
+  tgMessage += `🚚 <b>Yetkazib berish:</b> ${summary.isFreeDelivery ? 'BEPUL' : formatPrice(summary.deliveryFee)}\n`;
+  tgMessage += `💰 <b>JAMI TO'LOV:</b> <b>${formatPrice(summary.total)}</b>\n`;
+  tgMessage += `⏰ <b>Vaqt:</b> ${nowStr}`;
 
-  // Muvaffaqiyatli buyurtma modali
+  // Telegram Bot API orqali barcha adminlarga darhol yuborish
+  await sendToTelegramAdmins(tgMessage);
+
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnHtml;
+  }
+
+  // Savat va modalni tozalash
   closeCheckoutModal();
+  cart = [];
+  saveCart();
 
+  // Foydalanuvchiga muvaffaqiyat bildirishnomasi
   if (window.Swal) {
     Swal.fire({
       icon: 'success',
@@ -560,36 +638,31 @@ function handleOrderSubmit(e) {
         <div class="text-left text-sm space-y-2 mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
           <p><b>Buyurtma raqami:</b> <span class="text-emerald-700 font-bold">${orderNumber}</span></p>
           <p><b>Jami to'lov:</b> ${formatPrice(summary.total)}</p>
-          <p><b>Tezkor aloqa operatori:</b> <a href="tel:${STORE_CONFIG.phoneClean}" class="text-emerald-700 font-bold underline">${STORE_CONFIG.phone}</a></p>
-          <p class="text-xs text-slate-500 pt-2 border-t">Operatorimiz 5 daqiqa ichida buyurtmani tasdiqlash uchun siz bilan bog'lanadi!</p>
+          <p><b>Operator:</b> <a href="tel:${STORE_CONFIG.phoneClean}" class="text-emerald-700 font-bold underline">${STORE_CONFIG.phone}</a></p>
+          <div class="pt-2 border-t text-xs text-emerald-800 flex items-center gap-1.5 font-semibold">
+            <span>✅ Buyurtmangiz do'konga yetkazildi! Operator tez orada siz bilan bog'lanadi.</span>
+          </div>
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: '📱 Telegram orqali yuborish',
+      confirmButtonText: '💬 Operatorga Telegramda yozish',
       cancelButtonText: '📞 Qo\'ng\'iroq qilish (' + STORE_CONFIG.phoneDisplay + ')',
       confirmButtonColor: '#10b981',
       cancelButtonColor: '#0284c7'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Telegram orqali yuborish
-        const encoded = encodeURIComponent(orderMessage);
-        window.open(`https://t.me/share/url?url=${encoded}&text=Baraka%20Marketga%20Buyurtma`, '_blank');
+        window.open(`https://t.me/${STORE_CONFIG.telegramUser}?text=${encodeURIComponent('Assalomu alaykum! Men Baraka Marketdan buyurtma berdim: #' + orderNumber)}`, '_blank');
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Qo'ng'iroq qilish
         window.location.href = `tel:${STORE_CONFIG.phoneClean}`;
       }
     });
   } else {
-    alert(`Buyurtmangiz muvaffaqiyatli qabul qilindi! Buyurtma kodi: ${orderNumber}. Tez orada sizga qo'ng'iroq qilamiz.`);
+    alert(`Buyurtmangiz muvaffaqiyatli qabul qilindi! Buyurtma kodi: ${orderNumber}. Tez orada bog'lanamiz.`);
   }
-
-  // Savatni tozalash
-  cart = [];
-  saveCart();
 }
 
 // Qayta qo'ng'iroq so'rash formasi
-function handleCallbackRequest(e) {
+async function handleCallbackRequest(e) {
   e.preventDefault();
   const phoneInput = document.getElementById('callback-phone');
   const phone = phoneInput ? phoneInput.value.trim() : '';
@@ -598,6 +671,11 @@ function handleCallbackRequest(e) {
     alert("Iltimos, telefon raqamingizni kiriting!");
     return;
   }
+
+  const nowStr = new Date().toLocaleString('uz-UZ');
+  const callbackMsg = `📞 <b>QAYTA QO'NG'IROQ SO'ROVI!</b>\n\n👤 Mijoz tezkor qo'ng'iroq kutmoqda.\n📱 <b>Telefon:</b> <code>${escapeHtml(phone)}</code>\n⏰ <b>Vaqt:</b> ${nowStr}`;
+
+  await sendToTelegramAdmins(callbackMsg);
 
   if (window.Swal) {
     Swal.fire({

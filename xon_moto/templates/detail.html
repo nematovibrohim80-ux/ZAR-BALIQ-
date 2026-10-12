@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block title %}{{ vehicle.title }} - XON_MOTO Bozor{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Breadcrumb -->
+    <div class="flex items-center space-x-2 text-xs text-slate-400 mb-6">
+        <a href="{{ url_for('index') }}" class="hover:text-amber-400">Bosh sahifa</a>
+        <span>/</span>
+        <a href="{{ url_for('catalog') }}" class="hover:text-amber-400">Katalog</a>
+        <span>/</span>
+        <a href="{{ url_for('catalog', category=vehicle.category) }}" class="hover:text-amber-400 capitalize">
+            {% if vehicle.category == 'luxury' %}Qimmatbaho mashinalar
+            {% elif vehicle.category == 'budget' %}Hamyonbop mashinalar
+            {% else %}Mototsikllar{% endif %}
+        </a>
+        <span>/</span>
+        <span class="text-white font-medium truncate">{{ vehicle.title }}</span>
+    </div>
+
+    <!-- Main Detail Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Chap tomon: Rasmlar va Texnik parametrlar (8 ustun) -->
+        <div class="lg:col-span-8 space-y-8">
+            <!-- Asosiy Rasm -->
+            <div class="relative rounded-3xl overflow-hidden bg-dark-800 border border-slate-700/80 shadow-2xl">
+                <img src="{{ vehicle.image_url }}" alt="{{ vehicle.title }}" class="w-full h-[340px] sm:h-[480px] object-cover">
+                
+                <div class="absolute top-4 left-4 flex items-center space-x-2">
+                    {% if vehicle.category == 'luxury' %}
+                    <span class="px-3.5 py-1.5 rounded-xl text-xs badge-luxury">
+                        <i class="fas fa-crown mr-1"></i> VIP Qimmatbaho
+                    </span>
+                    {% elif vehicle.category == 'budget' %}
+                    <span class="px-3.5 py-1.5 rounded-xl text-xs badge-budget">
+                        <i class="fas fa-wallet mr-1"></i> Hamyonbop
+                    </span>
+                    {% else %}
+                    <span class="px-3.5 py-1.5 rounded-xl text-xs badge-moto">
+                        <i class="fas fa-motorcycle mr-1"></i> Mototsikl
+                    </span>
+                    {% endif %}
+
+                    <span class="px-3 py-1 rounded-xl text-xs bg-black/75 backdrop-blur-md text-white font-bold">
+                        {{ vehicle.year }}-yil
+                    </span>
+                </div>
+
+                <div class="absolute bottom-4 right-4 px-3 py-1 rounded-xl text-xs bg-black/75 backdrop-blur-md text-slate-300">
+                    <i class="fas fa-eye mr-1 text-amber-400"></i> {{ vehicle.views }} marta ko'rildi
+                </div>
+            </div>
+
+            <!-- Qo'shimcha rasmlar (agar mavjud bo'lsa) -->
+            {% if vehicle.additional_images and vehicle.additional_images|length > 0 %}
+            <div class="flex space-x-4 overflow-x-auto pb-2">
+                <div class="w-28 h-20 rounded-xl overflow-hidden border-2 border-amber-500 cursor-pointer flex-shrink-0">
+                    <img src="{{ vehicle.image_url }}" class="w-full h-full object-cover">
+                </div>
+                {% for img in vehicle.additional_images %}
+                <div class="w-28 h-20 rounded-xl overflow-hidden border border-slate-700 hover:border-amber-400 cursor-pointer flex-shrink-0">
+                    <img src="{{ img }}" class="w-full h-full object-cover">
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Texnik xususiyatlar jadvali -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                <h2 class="text-xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-cogs text-amber-500 mr-3"></i> Texnik Xususiyatlari
+                </h2>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Ishlab chiqarilgan yili</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.year }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Yurgan masofasi</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.mileage | format_price }} km</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Dvigatel hajmi / Quvvati</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.engine }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Yoqilg'i turi</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.fuel_type }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Uzatmalar qutisi</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.transmission }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Tortish turi (Privod)</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.drive_type }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Rangi</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.color }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Kuzov turi</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.body_type }}</div>
+                    </div>
+
+                    <div class="bg-dark-700/60 p-4 rounded-2xl border border-slate-700/50">
+                        <div class="text-slate-400 text-xs uppercase mb-1">Shahar / Viloyat</div>
+                        <div class="text-white font-bold text-base">{{ vehicle.city }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batafsil tavsif -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800">
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-file-alt text-amber-500 mr-3"></i> Sotuvchi Tavsifi
+                </h2>
+                <div class="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line">
+                    {{ vehicle.description }}
+                </div>
+            </div>
+        </div>
+
+        <!-- O'ng tomon: Narx, Sotuvchi va So'rov formasi (4 ustun) -->
+        <div class="lg:col-span-4 space-y-6">
+            <!-- Narx kartochkasi -->
+            <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 gold-border-glow">
+                <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Belgilangan narx:</span>
+                <div class="text-4xl font-black text-amber-400 mt-1">${{ vehicle.price | format_price }}</div>
+                <div class="text-sm text-slate-400 mt-1 font-medium">~{{ vehicle.price | price_in_som }} so'm</div>
+
+                <!-- Oylik kredit bahosi -->
+                <div class="mt-5 p-4 rounded-2xl bg-dark-700/80 border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] text-slate-400 uppercase font-semibold">Kreditga oyma-oy:</div>
+                        <div class="text-lg font-black text-emerald-400">
+                            ~${{ (vehicle.price * 0.7 * 0.035) | round | int | format_price }} / oy
+                        </div>
+                    </div>
+                    <a href="{{ url_for('calculator') }}" class="text-xs font-bold text-amber-400 hover:underline">
+                        Kalkulyator
+                    </a>
+                </div>
+
+                <!-- Sotuvchi ma'lumotlari -->
+                <div class="mt-6 pt-6 border-t border-slate-800 space-y-3">
+                    <div class="text-xs uppercase text-slate-400 font-bold tracking-wider">Sotuvchi:</div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-base">{{ vehicle.seller_name }}</div>
+                            <div class="text-xs text-slate-400"><i class="fas fa-map-marker-alt text-amber-500 mr-1"></i> {{ vehicle.city }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Telefon va Telegram tugmalari -->
+                    <div class="pt-3 space-y-2">
+                        <a href="tel:{{ vehicle.seller_phone }}" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-sm flex items-center justify-center space-x-2 shadow-lg shadow-amber-500/20 transition">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>{{ vehicle.seller_phone }}</span>
+                        </a>
+
+                        {% if vehicle.seller_telegram %}
+                        <a href="https://t.me/{{ vehicle.seller_telegram.replace('@', '') }}" target="_blank" class="w-full py-3 rounded-xl bg-[#229ED9]/20 hover:bg-[#229ED9]/30 text-[#229ED9] border border-[#229ED9]/40 font-bold text-sm flex items-center justify-center space-x-2 transition">
+                            <i class="fab fa-telegram-plane text-base"></i>
+                            <span>Telegram orqali yozish</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tezkor so'rov / Test-drive formasi -->
+            <div class="glass-panel p-6 rounded-3xl border border-slate-800">
+                <h3 class="text-base font-bold text-white mb-2 flex items-center">
+                    <i class="fas fa-paper-plane text-amber-500 mr-2"></i> Sotuvchiga so'rov yuborish
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">Ushbu transport vositasi bo'yicha test-drive yoki xarid qilish uchun so'rov qoldiring.</p>
+
+                <form id="inquiryForm" class="space-y-3">
+                    <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
+
+                    <div>
+                        <input type="text" name="name" required placeholder="Ismingiz" class="w-full bg-dark-700 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <input type="tel" name="phone" required placeholder="Telefon raqamingiz (+998...)" class="w-full bg-dark-700 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <select name="inquiry_type" class="w-full bg-dark-700 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            <option value="xarid">Transportni sotib olish</option>
+                            <option value="test-drive">Test-drive ga yozilish</option>
+                            <option value="kredit">Kredit shartlari haqida so'rash</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <textarea name="message" rows="2" placeholder="Xabaringiz (ixtiyoriy)..." class="w-full bg-dark-700 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white focus:border-amber-500 outline-none"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs uppercase tracking-wider border border-slate-600 transition flex items-center justify-center space-x-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>So'rov yuborish</span>
+                    </button>
+                </form>
+
+                <div id="inquiryStatus" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- O'xshash transport vositalari -->
+    {% if similar %}
+    <div class="mt-16 pt-12 border-t border-slate-800">
+        <h2 class="text-2xl font-black text-white mb-6">O'xshash Boshqa E'lonlar</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for sim in similar %}
+            <div class="car-card rounded-2xl overflow-hidden flex flex-col">
+                <div class="relative h-48 overflow-hidden bg-dark-700">
+                    <img src="{{ sim.image_url }}" alt="{{ sim.title }}" class="car-img w-full h-full object-cover">
+                    <span class="absolute top-3 right-3 px-2 py-0.5 rounded-lg text-xs bg-black/70 text-white font-semibold">
+                        {{ sim.year }}
+                    </span>
+                </div>
+                <div class="p-5 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-base font-bold text-white hover:text-amber-400 transition truncate">
+                            <a href="{{ url_for('vehicle_detail', vehicle_id=sim.id) }}">{{ sim.title }}</a>
+                        </h4>
+                        <div class="text-xs text-slate-400 mt-1">{{ sim.mileage | format_price }} km • {{ sim.fuel_type }}</div>
+                    </div>
+                    <div class="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-lg font-extrabold text-amber-400">${{ sim.price | format_price }}</span>
+                        <a href="{{ url_for('vehicle_detail', vehicle_id=sim.id) }}" class="text-xs font-bold text-slate-300 hover:text-amber-400">
+                            Ko'rish &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

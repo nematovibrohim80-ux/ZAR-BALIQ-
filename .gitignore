@@ -20,3 +20,11 @@ ENV/
 # IDE files
 .vscode/
 .idea/
+
+# Binaries and executables
+*.exe
+
+# Logs and backups
+*.log
+*.bak
+*_backup*

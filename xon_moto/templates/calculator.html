@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Avtokredit va Muddatli To'lov Kalkulyatori - XON_MOTO{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-3">
+            <i class="fas fa-calculator"></i>
+            <span>Avtokredit Hisoblagich</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-white">Avtokredit va Lizing Kalkulyatori</h1>
+        <p class="text-slate-400 text-sm mt-2">
+            XON_MOTO bozoridagi har qanday qimmatbaho, hamyonbop mashina yoki mototsikl uchun boshlang'ich to'lov va oylik badal miqdorini tezda hisoblab oling.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Kalkulyator kirish parametrlari (7 ustun) -->
+        <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700/80 shadow-2xl space-y-6">
+            <h2 class="text-xl font-bold text-white flex items-center">
+                <i class="fas fa-sliders-h text-amber-500 mr-2.5"></i> Kredit Parametrlari
+            </h2>
+
+            <!-- Mashina narxi -->
+            <div>
+                <div class="flex justify-between items-center mb-1.5">
+                    <label class="text-xs font-bold uppercase text-slate-300">Mashina yoki Moto Narxi ($)</label>
+                    <span class="text-xs text-amber-400 font-bold">USD</span>
+                </div>
+                <div class="relative">
+                    <input type="number" id="calcPrice" value="25000" step="500" class="w-full bg-dark-700 border border-slate-600 rounded-2xl pl-10 pr-4 py-3.5 text-lg font-black text-white focus:border-amber-500 outline-none">
+                    <i class="fas fa-dollar-sign absolute left-4 top-4 text-slate-400"></i>
+                </div>
+            </div>
+
+            <!-- Boshlang'ich to'lov foizi -->
+            <div>
+                <div class="flex justify-between items-center mb-1.5">
+                    <label class="text-xs font-bold uppercase text-slate-300">Boshlang'ich to'lov</label>
+                    <span id="initialPercentLabel" class="text-xs font-extrabold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg">30%</span>
+                </div>
+                <input type="range" id="calcInitialPercent" min="10" max="80" value="30" step="5" class="w-full h-2 bg-dark-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                    <span>10% (Minimal)</span>
+                    <span>30% (Standart)</span>
+                    <span>80%</span>
+                </div>
+            </div>
+
+            <!-- Muddat -->
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-300 mb-1.5">To'lov muddati</label>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <button type="button" onclick="setTerm(12, this)" class="term-btn py-2.5 rounded-xl border border-slate-700 text-xs font-bold hover:border-amber-500 text-slate-300">12 oy</button>
+                    <button type="button" onclick="setTerm(24, this)" class="term-btn py-2.5 rounded-xl border border-slate-700 text-xs font-bold hover:border-amber-500 text-slate-300">24 oy</button>
+                    <button type="button" onclick="setTerm(36, this)" class="term-btn py-2.5 rounded-xl border border-amber-500 bg-amber-500/10 text-xs font-bold text-amber-400">36 oy</button>
+                    <button type="button" onclick="setTerm(48, this)" class="term-btn py-2.5 rounded-xl border border-slate-700 text-xs font-bold hover:border-amber-500 text-slate-300">48 oy</button>
+                    <button type="button" onclick="setTerm(60, this)" class="term-btn py-2.5 rounded-xl border border-slate-700 text-xs font-bold hover:border-amber-500 text-slate-300">60 oy</button>
+                </div>
+                <input type="hidden" id="calcTermMonths" value="36">
+            </div>
+
+            <!-- Yillik foiz stavkasi -->
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-300 mb-1.5">Yillik foiz stavkasi (%)</label>
+                <div class="relative">
+                    <input type="number" id="calcInterestRate" value="18" step="0.5" class="w-full bg-dark-700 border border-slate-600 rounded-2xl pl-10 pr-4 py-3 text-base font-bold text-white focus:border-amber-500 outline-none">
+                    <i class="fas fa-percent absolute left-4 top-3.5 text-slate-400"></i>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">O'zbekiston banklari va lizing kompaniyalarining odatiy avtokredit foizi 16% - 24% atrofida bo'ladi.</p>
+            </div>
+        </div>
+
+        <!-- Natijalar bloki (5 ustun) -->
+        <div class="lg:col-span-5 space-y-6">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-amber-500/30 gold-border-glow bg-gradient-to-br from-dark-800 to-amber-950/40">
+                <span class="text-xs uppercase tracking-wider text-slate-400 font-bold">Har oylik to'lov:</span>
+                <div id="resMonthlyPayment" class="text-4xl font-black text-amber-400 tracking-tight mt-1">$633</div>
+                <div class="text-xs text-slate-400 mt-1">Har oy to'lanadigan annuitet to'lov</div>
+
+                <div class="space-y-4 pt-6 mt-6 border-t border-slate-700/80 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Boshlang'ich to'lov miqdori:</span>
+                        <span id="resInitialSum" class="font-extrabold text-white text-base">$7 500</span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Bank tomonidan beriladigan kredit:</span>
+                        <span id="resCreditSum" class="font-extrabold text-white text-base">$17 500</span>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Ustama foiz summasi:</span>
+                        <span id="resOverpayment" class="font-extrabold text-rose-400 text-base">$5 288</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+                        <span class="text-slate-300 font-bold">Jami to'lanadigan summa:</span>
+                        <span id="resTotalPayment" class="font-black text-amber-400 text-lg">$30 288</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-700/80">
+                    <a href="{{ url_for('contact') }}" class="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-sm block text-center shadow-lg shadow-amber-500/25 transition">
+                        Kredit olish uchun ariza qoldirish
+                    </a>
+                </div>
+            </div>
+
+            <!-- Eslatma -->
+            <div class="p-4 rounded-2xl bg-dark-700/50 border border-slate-700 text-xs text-slate-400 space-y-1">
+                <div class="text-white font-bold mb-1 flex items-center">
+                    <i class="fas fa-info-circle text-amber-400 mr-1.5"></i> Eslatma
+                </div>
+                <p>Ushbu hisob-kitob dastlabki tanishish uchun berilgan. Aniq shartlar bank yoki lizing tashkiloti tomonidan qabul qilinadi.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function setTerm(months, btn) {
+    document.getElementById('calcTermMonths').value = months;
+    document.querySelectorAll('.term-btn').forEach(b => {
+        b.className = 'term-btn py-2.5 rounded-xl border border-slate-700 text-xs font-bold hover:border-amber-500 text-slate-300';
+    });
+    btn.className = 'term-btn py-2.5 rounded-xl border border-amber-500 bg-amber-500/10 text-xs font-bold text-amber-400';
+    document.getElementById('calcTermMonths').dispatchEvent(new Event('change'));
+}
+</script>
+{% endblock %}

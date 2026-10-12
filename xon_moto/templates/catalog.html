@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Avto-Moto Katalogi - XON_MOTO Bozor{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Header title -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-8 border-b border-slate-800 gap-4">
+        <div>
+            <div class="inline-flex items-center space-x-2 text-amber-500 text-xs font-bold uppercase tracking-wider mb-1">
+                <i class="fas fa-car"></i>
+                <span>Avtomobillar & Mototsikllar Bo'limi</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-black text-white">XON_MOTO Bozor Katalogi</h1>
+            <p class="text-slate-400 text-sm mt-1">Jami <span class="text-amber-400 font-bold">{{ total_found }}</span> ta e'lon topildi</p>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <a href="{{ url_for('add_listing') }}" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-lg shadow-amber-500/20 flex items-center space-x-2 transition">
+                <i class="fas fa-plus-circle"></i>
+                <span>O'z mashinangizni soting</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Category Tabs Navigation -->
+    <div class="flex overflow-x-auto no-scrollbar space-x-2 py-6 border-b border-slate-800/80">
+        <a href="{{ url_for('catalog', category='all', search=search, min_price=min_price, max_price=max_price, sort_by=sort_by) }}" 
+           class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center space-x-2 {% if current_category == 'all' or not current_category %}bg-amber-500 text-black shadow-lg shadow-amber-500/20{% else %}bg-dark-800 text-slate-300 hover:bg-dark-700 hover:text-white border border-slate-700/60{% endif %}">
+            <i class="fas fa-layer-group"></i>
+            <span>Barchasi ({{ stats.total }})</span>
+        </a>
+
+        <a href="{{ url_for('catalog', category='luxury', search=search, min_price=min_price, max_price=max_price, sort_by=sort_by) }}" 
+           class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center space-x-2 {% if current_category == 'luxury' %}bg-gradient-to-r from-amber-500 to-amber-600 text-black shadow-lg shadow-amber-500/25{% else %}bg-dark-800 text-amber-400 hover:bg-dark-700 border border-slate-700/60{% endif %}">
+            <i class="fas fa-crown"></i>
+            <span>👑 Qimmatbaho mashinalar ({{ stats.luxury }})</span>
+        </a>
+
+        <a href="{{ url_for('catalog', category='budget', search=search, min_price=min_price, max_price=max_price, sort_by=sort_by) }}" 
+           class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center space-x-2 {% if current_category == 'budget' %}bg-emerald-500 text-black shadow-lg shadow-emerald-500/25{% else %}bg-dark-800 text-emerald-400 hover:bg-dark-700 border border-slate-700/60{% endif %}">
+            <i class="fas fa-wallet"></i>
+            <span>💰 Hamyonbop mashinalar ({{ stats.budget }})</span>
+        </a>
+
+        <a href="{{ url_for('catalog', category='moto', search=search, min_price=min_price, max_price=max_price, sort_by=sort_by) }}" 
+           class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center space-x-2 {% if current_category == 'moto' %}bg-indigo-500 text-white shadow-lg shadow-indigo-500/25{% else %}bg-dark-800 text-indigo-400 hover:bg-dark-700 border border-slate-700/60{% endif %}">
+            <i class="fas fa-motorcycle"></i>
+            <span>🏍️ Mototsikllar ({{ stats.moto }})</span>
+        </a>
+    </div>
+
+    <!-- Main Filter and Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
+        <!-- Sidebar Filter Form -->
+        <div class="lg:col-span-1">
+            <div class="glass-panel p-6 rounded-2xl sticky top-28 border border-slate-800">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                    <span class="font-bold text-white text-base flex items-center">
+                        <i class="fas fa-sliders-h text-amber-500 mr-2"></i> Filtrlash
+                    </span>
+                    <a href="{{ url_for('catalog') }}" class="text-xs text-slate-400 hover:text-amber-400">Tozalash</a>
+                </div>
+
+                <form action="{{ url_for('catalog') }}" method="GET" class="mt-5 space-y-5">
+                    <input type="hidden" name="category" value="{{ current_category }}">
+
+                    <!-- Search Input -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Model yoki brend</label>
+                        <div class="relative">
+                            <input type="text" name="search" value="{{ search }}" placeholder="Masalan: Cobalt, BMW..." class="w-full bg-dark-700 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            <i class="fas fa-search absolute right-3.5 top-3 text-slate-400 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- Min & Max Price -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Narx oralig'i ($)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" name="min_price" value="{{ min_price }}" placeholder="Dan" class="w-full bg-dark-700 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-500 outline-none">
+                            <input type="number" name="max_price" value="{{ max_price }}" placeholder="Gacha" class="w-full bg-dark-700 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:border-amber-500 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Sorting -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Saralash tartibi</label>
+                        <select name="sort_by" class="w-full bg-dark-700 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Yangi qo'shilganlar</option>
+                            <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Narx: Arzondan qimmatga</option>
+                            <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Narx: Qimmatdan arzonga</option>
+                            <option value="year_desc" {% if sort_by == 'year_desc' %}selected{% endif %}>Ishlab chiqarilgan yili bo'yicha</option>
+                            <option value="popular" {% if sort_by == 'popular' %}selected{% endif %}>Eng ko'p ko'rilganlar</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Button -->
+                    <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2">
+                        <i class="fas fa-check"></i>
+                        <span>Qo'llash</span>
+                    </button>
+                </form>
+
+                <!-- Kredit banneri sidebar da -->
+                <div class="mt-6 p-4 rounded-xl bg-gradient-to-br from-dark-900 to-amber-950/30 border border-amber-500/20 text-center">
+                    <i class="fas fa-calculator text-amber-400 text-2xl mb-2"></i>
+                    <h4 class="text-xs font-bold text-white uppercase">Avtokredit hisoblash</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Har qanday avtomobil uchun oylik to'lovni hisoblang</p>
+                    <a href="{{ url_for('calculator') }}" class="mt-3 inline-block text-xs font-bold text-amber-400 hover:underline">
+                        Kalkulyatorga o'tish &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Cards Display -->
+        <div class="lg:col-span-3">
+            {% if vehicles %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for car in vehicles %}
+                <div class="car-card rounded-2xl overflow-hidden flex flex-col">
+                    <div class="relative h-52 overflow-hidden bg-dark-700">
+                        <img src="{{ car.image_url }}" alt="{{ car.title }}" class="car-img w-full h-full object-cover">
+                        
+                        <!-- Kategoriya belgisi -->
+                        {% if car.category == 'luxury' %}
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] badge-luxury">
+                            <i class="fas fa-crown mr-1"></i> Qimmatbaho
+                        </span>
+                        {% elif car.category == 'budget' %}
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] badge-budget">
+                            <i class="fas fa-wallet mr-1"></i> Hamyonbop
+                        </span>
+                        {% else %}
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] badge-moto">
+                            <i class="fas fa-motorcycle mr-1"></i> Mototsikl
+                        </span>
+                        {% endif %}
+
+                        <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs bg-black/75 backdrop-blur-md text-white font-semibold">
+                            {{ car.year }}
+                        </span>
+                    </div>
+
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                                <span class="font-semibold text-amber-400 uppercase">{{ car.brand }}</span>
+                                <span><i class="fas fa-map-marker-alt text-[10px] text-amber-500 mr-1"></i> {{ car.city }}</span>
+                            </div>
+
+                            <h3 class="text-base font-bold text-white hover:text-amber-400 transition truncate">
+                                <a href="{{ url_for('vehicle_detail', vehicle_id=car.id) }}">{{ car.title }}</a>
+                            </h3>
+
+                            <!-- Parametrlari -->
+                            <div class="grid grid-cols-2 gap-2 my-3 text-xs text-slate-300 bg-dark-700/60 p-2.5 rounded-xl border border-slate-700/50">
+                                <div class="flex items-center space-x-1.5 truncate">
+                                    <i class="fas fa-tachometer-alt text-amber-400 text-[10px]"></i>
+                                    <span>{{ car.mileage | format_price }} km</span>
+                                </div>
+                                <div class="flex items-center space-x-1.5 truncate">
+                                    <i class="fas fa-gas-pump text-amber-400 text-[10px]"></i>
+                                    <span>{{ car.fuel_type }}</span>
+                                </div>
+                                <div class="flex items-center space-x-1.5 truncate col-span-2">
+                                    <i class="fas fa-cogs text-amber-400 text-[10px]"></i>
+                                    <span class="truncate">{{ car.transmission }} • {{ car.engine }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+                            <div>
+                                <div class="text-xl font-extrabold text-amber-400">${{ car.price | format_price }}</div>
+                                <div class="text-[10px] text-slate-400">~{{ car.price | price_in_som }} so'm</div>
+                            </div>
+                            <a href="{{ url_for('vehicle_detail', vehicle_id=car.id) }}" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-black border border-amber-500/30 transition">
+                                Ko'rish
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Bo'sh natija holati -->
+            <div class="glass-panel rounded-2xl p-12 text-center space-y-4">
+                <div class="w-20 h-20 rounded-full bg-dark-700 text-slate-400 flex items-center justify-center mx-auto text-3xl">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Hech qanday transport topilmadi</h3>
+                <p class="text-sm text-slate-400 max-w-md mx-auto">
+                    Kiritilgan parametrlar bo'yicha e'lonlar mavjud emas. Filtrlarni tozalab ko'ring yoki boshqa nom bilan qidiring.
+                </p>
+                <div class="pt-2">
+                    <a href="{{ url_for('catalog') }}" class="px-5 py-2.5 rounded-xl bg-amber-500 text-black font-bold text-xs inline-block">
+                        Barcha e'lonlarni ko'rish
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XON_MOTO - Qimmatbaho & Hamyonbop Mashinalar va Mototsikllar Bozori</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+                        dark: { 950: '#06080d', 900: '#0a0d14', 850: '#0e131d', 800: '#121824', 700: '#1a2234', 600: '#26334d' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0a0d14; color: #f1f5f9; }
+        h1, h2, h3, h4, .brand-font { font-family: 'Outfit', sans-serif; }
+        .glass-panel { background: rgba(18, 24, 36, 0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gold-glow { text-shadow: 0 0 20px rgba(245, 158, 11, 0.45); }
+        .gold-border { border-color: rgba(245, 158, 11, 0.35); box-shadow: 0 0 25px rgba(245, 158, 11, 0.12); }
+        .car-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .car-card:hover { transform: translateY(-5px); border-color: rgba(245, 158, 11, 0.45); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.15); }
+        .car-card:hover img { transform: scale(1.04); }
+        .badge-luxury { background: linear-gradient(135deg, #f59e0b, #b45309); color: #000; font-weight: 700; }
+        .badge-budget { background: linear-gradient(135deg, #10b981, #047857); color: #fff; font-weight: 700; }
+        .badge-moto { background: linear-gradient(135deg, #6366f1, #4338ca); color: #fff; font-weight: 700; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0d14; }
+        ::-webkit-scrollbar-thumb { background: #26334d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-black">
+
+    <!-- Top Alert Notification Bar -->
+    <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 text-black text-xs font-semibold py-2 px-4 shadow-md">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <span class="flex items-center"><i class="fas fa-crown mr-2 text-sm"></i> <strong>XON_MOTO</strong> — O'zbekistondagi premium va hamyonbop avto-moto bozori!</span>
+            <div class="hidden sm:flex items-center space-x-4 font-bold">
+                <a href="tel:+998907770000" class="hover:underline"><i class="fas fa-phone mr-1"></i> +998 90 777 00 00</a>
+                <span>|</span>
+                <span><i class="fas fa-fire mr-1 text-red-800"></i> Bepul e'lon berish imkoniyati</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-dark-900/95 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#hero" class="flex items-center space-x-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-black text-2xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center">
+                            <span class="brand-font text-2xl sm:text-3xl font-black text-white tracking-wider">XON</span>
+                            <span class="brand-font text-2xl sm:text-3xl font-black text-amber-500 ml-1.5 tracking-wider">MOTO</span>
+                        </div>
+                        <p class="text-[10px] tracking-widest uppercase text-slate-400 font-medium">Avto & Moto Bozori</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-medium">
+                    <button onclick="filterCategory('all')" class="px-3 py-2 rounded-lg hover:text-amber-400 transition">Barchasi</button>
+                    <button onclick="filterCategory('luxury')" class="px-3 py-2 rounded-lg text-amber-400 hover:bg-amber-500/10 transition flex items-center space-x-1.5">
+                        <i class="fas fa-gem text-xs"></i> <span>Qimmatbaho</span>
+                    </button>
+                    <button onclick="filterCategory('budget')" class="px-3 py-2 rounded-lg text-emerald-400 hover:bg-emerald-500/10 transition flex items-center space-x-1.5">
+                        <i class="fas fa-wallet text-xs"></i> <span>Hamyonbop</span>
+                    </button>
+                    <button onclick="filterCategory('moto')" class="px-3 py-2 rounded-lg text-indigo-400 hover:bg-indigo-500/10 transition flex items-center space-x-1.5">
+                        <i class="fas fa-motorcycle text-xs"></i> <span>Mototsikllar</span>
+                    </button>
+                    <a href="#calculator" class="px-3 py-2 rounded-lg text-slate-300 hover:text-amber-400 transition">Kalkulyator</a>
+                    <a href="#contact" class="px-3 py-2 rounded-lg text-slate-300 hover:text-amber-400 transition">Aloqa</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="openAddModal()" class="px-4 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-lg shadow-amber-500/25 flex items-center space-x-2 transition hover:-translate-y-0.5">
+                        <i class="fas fa-plus-circle text-base"></i>
+                        <span>+ E'lon Berish</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative overflow-hidden pt-12 pb-20 border-b border-slate-800 bg-gradient-to-b from-dark-950 via-dark-900 to-dark-850">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs sm:text-sm font-semibold mb-4">
+                <i class="fas fa-bolt animate-pulse"></i>
+                <span>XON_MOTO — O'zbekistonning eng zamonaviy mashina va moto bozori</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight max-w-4xl mx-auto">
+                Qimmatbaho & Hamyonbop <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-300">Mashinalar va Mototsikllar</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mt-4 font-normal">
+                Hashamatli VIP sportkarlar, xalqona hamyonbop tejamkor mashinalar va adrenalin bag'ishlovchi tezkor mototsikllarni eng qulay narxlarda toping yoki o'z e'loningizni soting!
+            </p>
+
+            <!-- Quick Search / Filter Bar -->
+            <div class="mt-10 max-w-4xl mx-auto glass-panel p-4 sm:p-6 rounded-3xl shadow-2xl gold-border text-left">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Category -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Toifa</label>
+                        <select id="heroCategory" class="w-full bg-dark-700 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500">
+                            <option value="all">Barcha toifalar</option>
+                            <option value="luxury">👑 Qimmatbaho mashinalar</option>
+                            <option value="budget">💰 Hamyonbop mashinalar</option>
+                            <option value="moto">🏍️ Mototsikllar</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Model yoki brend</label>
+                        <div class="relative">
+                            <input type="text" id="heroSearch" placeholder="G63, Cobalt, Ninja..." class="w-full bg-dark-700 border border-slate-700 text-slate-200 text-sm rounded-xl pl-9 pr-3 py-3 focus:outline-none focus:border-amber-500">
+                            <i class="fas fa-search absolute left-3 top-3.5 text-slate-400 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- Max Price -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Maksimal narx ($)</label>
+                        <div class="relative">
+                            <input type="number" id="heroMaxPrice" placeholder="Masalan: 30000" class="w-full bg-dark-700 border border-slate-700 text-slate-200 text-sm rounded-xl pl-9 pr-3 py-3 focus:outline-none focus:border-amber-500">
+                            <i class="fas fa-dollar-sign absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- Filter Button -->
+                    <div class="flex items-end">
+                        <button onclick="applyHeroFilter()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2">
+                            <i class="fas fa-filter"></i>
+                            <span>Qidirish</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Fast Tags -->
+                <div class="mt-4 pt-4 border-t border-slate-800 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                    <span class="font-bold text-slate-300">Tezkor:</span>
+                    <button onclick="quickSearch('Cobalt')" class="px-2.5 py-1 rounded-lg bg-dark-700 hover:bg-amber-500 hover:text-black transition">Cobalt</button>
+                    <button onclick="quickSearch('Gentra')" class="px-2.5 py-1 rounded-lg bg-dark-700 hover:bg-amber-500 hover:text-black transition">Gentra</button>
+                    <button onclick="quickSearch('G63')" class="px-2.5 py-1 rounded-lg bg-dark-700 hover:bg-amber-500 hover:text-black transition">Mercedes G63</button>
+                    <button onclick="quickSearch('Ninja')" class="px-2.5 py-1 rounded-lg bg-dark-700 hover:bg-amber-500 hover:text-black transition">Ninja ZX-10R</button>
+                    <button onclick="quickSearch('BMW')" class="px-2.5 py-1 rounded-lg bg-dark-700 hover:bg-amber-500 hover:text-black transition">BMW</button>
+                    <button onclick="quickSearch('BYD')" class="px-2.5 py-1 rounded-lg bg-dark-700 hover:bg-amber-500 hover:text-black transition">BYD Chazor</button>
+                </div>
+            </div>
+
+            <!-- 3 Category Banner Cards -->
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <!-- 1. Qimmatbaho -->
+                <div onclick="filterCategory('luxury')" class="cursor-pointer group glass-panel p-6 rounded-3xl border border-amber-500/30 hover:border-amber-500 transition duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <span id="luxuryCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300">5 ta model</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-amber-400 transition">Qimmatbaho Mashinalar</h3>
+                    <p class="text-xs text-slate-400 mt-1">Rolls-Royce, Mercedes-AMG, Porsche, BMW M5 va hashamatli VIP superkarlar.</p>
+                </div>
+
+                <!-- 2. Hamyonbop -->
+                <div onclick="filterCategory('budget')" class="cursor-pointer group glass-panel p-6 rounded-3xl border border-emerald-500/30 hover:border-emerald-500 transition duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <span id="budgetCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300">5 ta model</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition">Hamyonbop Mashinalar</h3>
+                    <p class="text-xs text-slate-400 mt-1">Cobalt, Gentra, Onix, Tracker, BYD, tejamkor va hamyonbop xalq avtomobillari.</p>
+                </div>
+
+                <!-- 3. Mototsikllar -->
+                <div onclick="filterCategory('moto')" class="cursor-pointer group glass-panel p-6 rounded-3xl border border-indigo-500/30 hover:border-indigo-500 transition duration-300 hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-motorcycle"></i>
+                        </div>
+                        <span id="motoCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300">6 ta model</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-indigo-400 transition">Mototsikllar & Skuterlar</h3>
+                    <p class="text-xs text-slate-400 mt-1">Kawasaki Ninja, BMW S1000RR, Yamaha R1, Ducati, Harley-Davidson va Vespa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Marketplace Section -->
+    <section id="marketplace" class="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-grow">
+        <!-- Section Controls -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-black text-white flex items-center">
+                    <span id="sectionTitle">XON_MOTO Bozor Vitrinasi</span>
+                    <span id="totalFoundBadge" class="ml-3 text-xs font-bold px-3 py-1 rounded-full bg-dark-700 text-amber-400 border border-slate-700">16 ta</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Siz xohlagan transportni tanlang, batafsil parametrlarini ko'ring yoki bog'laning</p>
+            </div>
+
+            <!-- Sorting & Filter Controls -->
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Category Tabs -->
+                <div class="flex bg-dark-800 p-1 rounded-xl border border-slate-700">
+                    <button onclick="filterCategory('all')" id="tabAll" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-black">Barchasi</button>
+                    <button onclick="filterCategory('luxury')" id="tabLuxury" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white">👑 Qimmatbaho</button>
+                    <button onclick="filterCategory('budget')" id="tabBudget" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white">💰 Hamyonbop</button>
+                    <button onclick="filterCategory('moto')" id="tabMoto" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white">🏍️ Mototsikl</button>
+                </div>
+
+                <!-- Sort select -->
+                <select id="sortBy" onchange="renderVehicles()" class="bg-dark-800 border border-slate-700 text-slate-200 text-xs font-semibold rounded-xl px-3 py-2 outline-none">
+                    <option value="newest">Yangi qo'shilganlar</option>
+                    <option value="price_asc">Narx: Arzondan qimmatga</option>
+                    <option value="price_desc">Narx: Qimmatdan arzonga</option>
+                    <option value="year_desc">Ishlab chiqarilgan yili</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Vehicle Grid -->
+        <div id="vehicleGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+            <!-- Dynamically populated by JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyState" class="hidden glass-panel rounded-3xl p-12 text-center mt-8">
+            <div class="w-16 h-16 rounded-full bg-dark-700 text-slate-400 flex items-center justify-center mx-auto text-2xl mb-3">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Hech qanday transport topilmadi</h3>
+            <p class="text-xs text-slate-400 mt-1">Qidiruv yoki filtr parametrlarini o'zgartirib ko'ring.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 rounded-xl bg-amber-500 text-black font-bold text-xs">Filtrni tozalash</button>
+        </div>
+    </section>
+
+    <!-- Credit & Lease Calculator Section -->
+    <section id="calculator" class="py-16 bg-gradient-to-b from-dark-850 to-dark-950 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl p-6 sm:p-10 border border-amber-500/20 shadow-2xl">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Left: Parameters -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div>
+                            <div class="inline-flex items-center space-x-2 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
+                                <i class="fas fa-calculator"></i>
+                                <span>Avtokredit va Lizing</span>
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-white">Avtokredit To'lovini Hisoblang</h2>
+                            <p class="text-slate-400 text-xs sm:text-sm mt-1">Har qanday qimmatbaho, hamyonbop mashina yoki mototsikl uchun oylik to'lovni avtomatik hisoblang.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Transport narxi ($)</label>
+                                <input type="number" id="calcPrice" value="22000" step="500" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-white font-bold focus:border-amber-500 outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Kredit muddati</label>
+                                <select id="calcTermMonths" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-white font-bold focus:border-amber-500 outline-none">
+                                    <option value="12">12 oy (1 yil)</option>
+                                    <option value="24">24 oy (2 yil)</option>
+                                    <option value="36" selected>36 oy (3 yil)</option>
+                                    <option value="48">48 oy (4 yil)</option>
+                                    <option value="60">60 oy (5 yil)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="text-xs font-semibold text-slate-300">Boshlang'ich to'lov</label>
+                                    <span id="initialPercentLabel" class="text-xs font-bold text-amber-400">30%</span>
+                                </div>
+                                <input type="range" id="calcInitialPercent" min="15" max="80" value="30" step="5" class="w-full accent-amber-500 cursor-pointer">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Yillik foiz stavkasi (%)</label>
+                                <input type="number" id="calcInterestRate" value="18" step="0.5" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-white font-bold focus:border-amber-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results -->
+                    <div class="lg:col-span-5 bg-gradient-to-br from-dark-900 to-amber-950/40 p-6 sm:p-8 rounded-2xl border border-amber-500/30 flex flex-col justify-between space-y-6">
+                        <div>
+                            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Har oylik to'lov:</span>
+                            <div id="resMonthlyPayment" class="text-4xl font-black text-amber-400 tracking-tight mt-1">$531</div>
+                            <p class="text-[11px] text-slate-400 mt-1">*Annuitet hisob-kitob asosida</p>
+                        </div>
+
+                        <div class="space-y-3 pt-4 border-t border-slate-800 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Boshlang'ich to'lov miqdori:</span>
+                                <span id="resInitialSum" class="font-bold text-white">$6 600</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Kredit summasi:</span>
+                                <span id="resCreditSum" class="font-bold text-white">$15 400</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Jami qaytariladigan summa:</span>
+                                <span id="resTotalPayment" class="font-bold text-white">$25 716</span>
+                            </div>
+                        </div>
+
+                        <a href="tel:+998907770000" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-center text-sm shadow-lg shadow-amber-500/20 transition block">
+                            Kredit bo'yicha maslahat: +998 90 777 00 00
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Showroom Section -->
+    <section id="contact" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass-panel p-8 rounded-3xl border border-slate-800 space-y-4">
+                <div class="inline-flex items-center space-x-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Avtosalon & Manzil</span>
+                </div>
+                <h3 class="text-2xl font-black text-white">XON_MOTO Bozoriga Tashrif Buyuring</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Bizning ko'rgazma zalimizda barcha qimmatbaho superkarlar, hamyonbop xalqona mashinalar va mototsikllarni jonli ko'zdan kechirishingiz, motorini sinab ko'rishingiz va o'zingiznikini sotuvga qo'yishingiz mumkin.
+                </p>
+
+                <div class="space-y-3 pt-3 text-sm">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-map-pin text-amber-500 w-5"></i>
+                        <span>Toshkent sh., Yangisergeli ko'chasi, Sergeli mashina bozori majmuasi</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-phone text-amber-500 w-5"></i>
+                        <a href="tel:+998907770000" class="font-bold text-white hover:text-amber-400">+998 90 777 00 00</a>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-clock text-amber-500 w-5"></i>
+                        <span>Har kuni: 08:00 - 21:00 (Dam olish kunlarisiz)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Listing CTA -->
+            <div class="rounded-3xl p-8 bg-gradient-to-br from-amber-600 via-amber-500 to-amber-700 text-black flex flex-col justify-between shadow-2xl">
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-black text-amber-400 text-xs font-black uppercase tracking-wider">
+                        Tezkor & Bepul
+                    </span>
+                    <h3 class="text-2xl sm:text-3xl font-black mt-3 leading-tight">O'z Mashina yoki Motongizni XON_MOTO da Soting!</h3>
+                    <p class="text-black/85 text-xs sm:text-sm mt-2 leading-relaxed font-medium">
+                        Hech qanday to'lovlarsiz o'z transport vositangizni fotosuratlari va narxi bilan saytga joylashtiring. Xaridorlar bilan to'g'ridan-to'g'ri bog'laning!
+                    </p>
+                </div>
+                <div class="pt-6">
+                    <button onclick="openAddModal()" class="px-6 py-3.5 rounded-xl bg-black text-white hover:bg-slate-900 font-black text-sm shadow-xl flex items-center space-x-2 transition">
+                        <i class="fas fa-plus-circle text-amber-400"></i>
+                        <span>Hozir E'lon Joylashtirish</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-950 border-t border-slate-800 py-10 mt-auto text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <div class="flex items-center justify-center space-x-2">
+                <span class="brand-font text-xl font-black text-white">XON</span>
+                <span class="brand-font text-xl font-black text-amber-500">MOTO</span>
+            </div>
+            <p>Qimmatbaho mashinalar • Hamyonbop xalq avtolari • Sport mototsikllar</p>
+            <p>&copy; 2026 XON_MOTO. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: CAR DETAIL MODAL -->
+    <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-panel w-full max-w-4xl rounded-3xl overflow-hidden border border-slate-700/80 shadow-2xl my-8 relative">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-amber-500 hover:text-black transition">
+                <i class="fas fa-times text-base"></i>
+            </button>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12">
+                <!-- Image & Badges (6 cols) -->
+                <div class="lg:col-span-6 relative h-64 sm:h-96 lg:h-full bg-dark-800">
+                    <img id="modalImage" src="" alt="" class="w-full h-full object-cover">
+                    <div class="absolute top-4 left-4">
+                        <span id="modalBadge" class="px-3 py-1 rounded-xl text-xs font-bold"></span>
+                    </div>
+                </div>
+
+                <!-- Details & Contact (6 cols) -->
+                <div class="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="text-xs text-amber-400 font-bold uppercase tracking-wider" id="modalBrand"></div>
+                        <h3 class="text-2xl font-black text-white mt-1" id="modalTitle"></h3>
+                        <div class="flex items-baseline space-x-3 mt-3">
+                            <span class="text-3xl font-black text-amber-400" id="modalPrice"></span>
+                            <span class="text-xs text-slate-400 font-medium" id="modalPriceSom"></span>
+                        </div>
+
+                        <!-- Mini Specs Grid -->
+                        <div class="grid grid-cols-2 gap-2 mt-5 text-xs bg-dark-700/60 p-3 rounded-2xl border border-slate-700">
+                            <div><span class="text-slate-400">Yili:</span> <strong class="text-white" id="modalYear"></strong></div>
+                            <div><span class="text-slate-400">Probeg:</span> <strong class="text-white" id="modalMileage"></strong></div>
+                            <div><span class="text-slate-400">Yoqilg'i:</span> <strong class="text-white" id="modalFuel"></strong></div>
+                            <div><span class="text-slate-400">Uzatma:</span> <strong class="text-white" id="modalTrans"></strong></div>
+                            <div><span class="text-slate-400">Rangi:</span> <strong class="text-white" id="modalColor"></strong></div>
+                            <div><span class="text-slate-400">Shahar:</span> <strong class="text-white" id="modalCity"></strong></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mt-4">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase mb-1">Tavsif:</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed" id="modalDesc"></p>
+                        </div>
+                    </div>
+
+                    <!-- Seller card -->
+                    <div class="pt-4 border-t border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-slate-400">Sotuvchi:</span>
+                            <strong class="text-white font-bold" id="modalSellerName"></strong>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <a id="modalCallBtn" href="#" class="py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs text-center flex items-center justify-center space-x-1 transition shadow-lg shadow-amber-500/20">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>Qo'ng'iroq</span>
+                            </a>
+                            <a id="modalTgBtn" href="#" target="_blank" class="py-3 rounded-xl bg-[#229ED9]/20 hover:bg-[#229ED9]/30 text-[#229ED9] border border-[#229ED9]/40 font-bold text-xs text-center flex items-center justify-center space-x-1 transition">
+                                <i class="fab fa-telegram-plane"></i>
+                                <span>Telegram</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD LISTING MODAL -->
+    <div id="addModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl my-8 relative">
+            <button onclick="closeAddModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-dark-700 text-slate-300 flex items-center justify-center hover:bg-amber-500 hover:text-black transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+
+            <div class="text-left mb-6">
+                <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold border border-amber-500/30">
+                    <i class="fas fa-plus mr-1"></i> Yangi E'lon
+                </span>
+                <h3 class="text-2xl font-black text-white mt-2">Transportingizni Sotuvga Qo'ying</h3>
+                <p class="text-xs text-slate-400 mt-1">Ma'lumotlarni to'ldiring, e'loningiz darhol XON_MOTO bozorida paydo bo'ladi.</p>
+            </div>
+
+            <form id="addForm" onsubmit="handleAddNewVehicle(event)" class="space-y-4 text-left">
+                <!-- Toifa tanlash -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Toifasi *</label>
+                    <select id="newCategory" required class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                        <option value="luxury">👑 Qimmatbaho mashina (VIP / Hashamatli)</option>
+                        <option value="budget" selected>💰 Hamyonbop mashina (Xalqona / Tejamkor)</option>
+                        <option value="moto">🏍️ Mototsikl / Skuter</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Brend (Marka) *</label>
+                        <input type="text" id="newBrand" required placeholder="Chevrolet, Mercedes, BMW..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Model *</label>
+                        <input type="text" id="newModel" required placeholder="Cobalt, G63, Ninja..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Yili *</label>
+                        <input type="number" id="newYear" required value="2024" min="1995" max="2026" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Narxi ($) *</label>
+                        <input type="number" id="newPrice" required placeholder="14000" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white font-bold focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Probeg (km) *</label>
+                        <input type="number" id="newMileage" required placeholder="12000" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Dvigatel</label>
+                        <input type="text" id="newEngine" placeholder="1.5L / 4.0L V8..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Yoqilg'i</label>
+                        <select id="newFuel" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                            <option value="Benzin">Benzin</option>
+                            <option value="Gaz-Benzin">Gaz-Benzin</option>
+                            <option value="Gibrid">Gibrid</option>
+                            <option value="Elektro">Elektro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Rangi</label>
+                        <input type="text" id="newColor" placeholder="Oq, Qora..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Rasm URL yoki rasm yuklash -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Rasm havolasi (URL manzili yoki bo'sh qoldiring)</label>
+                    <input type="url" id="newImageUrl" placeholder="https://images.unsplash.com/photo-..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                </div>
+
+                <!-- Sotuvchi ma'lumotlari -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Ismingiz *</label>
+                        <input type="text" id="newSellerName" required placeholder="Ali Valiyev" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Telefon *</label>
+                        <input type="tel" id="newSellerPhone" required placeholder="+998 90 123 45 67" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Shahar *</label>
+                        <input type="text" id="newCity" required value="Toshkent shahri" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Qo'shimcha tavsif</label>
+                    <textarea id="newDesc" rows="2" placeholder="Holati, jihozlari, tonirovka va boshqalar..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2 text-xs text-white focus:border-amber-500 outline-none"></textarea>
+                </div>
+
+                <div class="pt-3">
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-sm shadow-xl shadow-amber-500/20 transition">
+                        E'lonni Joylashtirish
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-dark-800 border border-amber-500 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 hidden transition-all transform duration-300">
+        <i class="fas fa-check-circle text-amber-400 text-lg"></i>
+        <span id="toastMsg" class="text-xs font-bold"></span>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // Pre-loaded Vehicles Data
+        const initialVehicles = [
+            // LUXURY
+            {
+                id: 1,
+                title: "Mercedes-Benz G63 AMG Edition 1",
+                category: "luxury",
+                brand: "Mercedes-Benz",
+                model: "G63 AMG",
+                year: 2024,
+                price: 248000,
+                mileage: 3500,
+                engine: "4.0L V8 Biturbo (585 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "9G-Tronic Avtomat",
+                color: "Matte Black (Qora mat)",
+                city: "Toshkent shahri",
+                desc: "Eng so'nggi rusumdagi Mercedes-Benz G63 AMG. Karbon to'plami, Burmester 3D audio tizimi, qizil nappa charm salon, to'liq zirhli plyonka bilan himoyalangan.",
+                image: "https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?auto=format&fit=crop&w=1000&q=80",
+                seller: "XON_MOTO VIP Salon",
+                phone: "+998 90 777 00 01",
+                tg: "@xon_moto_vip"
+            },
+            {
+                id: 2,
+                title: "Porsche 911 Turbo S Coupe",
+                category: "luxury",
+                brand: "Porsche",
+                model: "911 Turbo S",
+                year: 2024,
+                price: 265000,
+                mileage: 1800,
+                engine: "3.8L Boxer Twin-Turbo (650 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "8-bosqichli PDK",
+                color: "GT Silver Metallic",
+                city: "Toshkent shahri",
+                desc: "0-100 km/soat ga 2.7 soniya! Keramika tormozlar (PCCB), Sport Chrono to'plami, karbon tom va sport exhaust tizimi.",
+                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80",
+                seller: "XON_MOTO Exclusive",
+                phone: "+998 90 777 00 02",
+                tg: "@xon_moto_vip"
+            },
+            {
+                id: 3,
+                title: "BMW M5 CS Competition F90",
+                category: "luxury",
+                brand: "BMW",
+                model: "M5 CS",
+                year: 2023,
+                price: 142000,
+                mileage: 8200,
+                engine: "4.4L V8 M TwinPower (635 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "M Steptronic 8-tezlik",
+                color: "Frozen Deep Green",
+                city: "Toshkent shahri",
+                desc: "Cheklangan seriyali BMW M5 CS. Karbon o'rindiqlar, oltinrang diskalar, keramika tormozlar, maksimal tezlik 305 km/soat.",
+                image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1000&q=80",
+                seller: "Sardor Rahimov",
+                phone: "+998 97 123 45 67",
+                tg: "@sardor_m5"
+            },
+            {
+                id: 4,
+                title: "Rolls-Royce Cullinan Black Badge",
+                category: "luxury",
+                brand: "Rolls-Royce",
+                model: "Cullinan",
+                year: 2023,
+                price: 510000,
+                mileage: 4200,
+                engine: "6.75L V12 Twin-Turbo (600 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "8-tezlikli ZF Avtomat",
+                color: "Dark Diamond Black",
+                city: "Toshkent shahri",
+                desc: "Dunyoning eng hashamatli yo'ltanlamasi. Yulduzli osmon shifti (Starlight), muzlatgich, shampan jamlanmasi, massajli orqa o'rindiqlar.",
+                image: "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?auto=format&fit=crop&w=1000&q=80",
+                seller: "XON_MOTO Elite Club",
+                phone: "+998 99 999 00 09",
+                tg: "@xon_moto_vip"
+            },
+            {
+                id: 5,
+                title: "Li Auto L9 Ultra Max",
+                category: "luxury",
+                brand: "Li Auto",
+                model: "L9 Ultra",
+                year: 2024,
+                price: 59500,
+                mileage: 1200,
+                engine: "1.5T Range Extender + 2x Electro (449 ot kuchi)",
+                fuel: "Gibrid",
+                transmission: "Elektro-reduktor",
+                color: "Oltinrang Kumush",
+                city: "Samarqand shahri",
+                desc: "Oilaviy premium gibrid krossover. 1315 km yurish masofasi, pnevmatik podveska, OLED kinoteatr ekrani va muzlatgich.",
+                image: "https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=1000&q=80",
+                seller: "Azizbek Auto",
+                phone: "+998 93 450 11 22",
+                tg: "@aziz_cars"
+            },
+
+            // BUDGET (HAMYONBOP)
+            {
+                id: 6,
+                title: "Chevrolet Cobalt GX Style AT",
+                category: "budget",
+                brand: "Chevrolet",
+                model: "Cobalt",
+                year: 2024,
+                price: 13400,
+                mileage: 12000,
+                engine: "1.5L DOHC (106 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-bosqichli Avtomat",
+                color: "GK2 Oq",
+                city: "Toshkent shahri",
+                desc: "Yangi avlod Cobalt 4-pozitsiya Style. Konditsioner, tonirovka ruxsatnomasi, yangi yumshoq shinalar o'rnatilgan. Xarajati yo'q.",
+                image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1000&q=80",
+                seller: "Botirjon Aliyev",
+                phone: "+998 90 345 88 99",
+                tg: "@botir_cobalt"
+            },
+            {
+                id: 7,
+                title: "Chevrolet Gentra Elegance Plus CDX",
+                category: "budget",
+                brand: "Chevrolet",
+                model: "Gentra",
+                year: 2023,
+                price: 14100,
+                mileage: 24000,
+                engine: "1.5L DOHC (107 ot kuchi)",
+                fuel: "Gaz-Benzin (4-avlod)",
+                transmission: "Avtomat",
+                color: "Qora (Black Sapphire)",
+                city: "Farg'ona shahri",
+                desc: "Gentra 3-pozitsiya lyukli, ABS, 4-avlod propan gaz baloni o'rnatilgan. Kraskasi toza, 100% ideal holatda.",
+                image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1000&q=80",
+                seller: "Jamshid Xoliqov",
+                phone: "+998 91 555 33 22",
+                tg: "@jamshid_gentra"
+            },
+            {
+                id: 8,
+                title: "Chevrolet Onix Premier 2 Turbo",
+                category: "budget",
+                brand: "Chevrolet",
+                model: "Onix",
+                year: 2024,
+                price: 16900,
+                mileage: 9000,
+                engine: "1.2L Turbo (132 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-bosqichli Avtomat",
+                color: "Kumushrang metallik",
+                city: "Andijon shahri",
+                desc: "Premier maksimal: simsiz quvvatlagich, avtomatik parkovka, lyuk, kruiz nazorati, charm salon, o'rindiqlar isitgichi.",
+                image: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1000&q=80",
+                seller: "Diyorbek Rustamov",
+                phone: "+998 94 620 40 40",
+                tg: "@diyor_onix"
+            },
+            {
+                id: 9,
+                title: "Chevrolet Tracker Premier Redline",
+                category: "budget",
+                brand: "Chevrolet",
+                model: "Tracker",
+                year: 2024,
+                price: 20900,
+                mileage: 15000,
+                engine: "1.2L Turbo (132 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-bosqichli Avtomat",
+                color: "Oq (Summit White)",
+                city: "Namangan shahri",
+                desc: "Panoramali tom lyuki, LED optika, ko'rinmas hududlar datchigi, Redline maxsus qizil chiziqlari. Shahar uchun juda qulay.",
+                image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1000&q=80",
+                seller: "Olimjon Qosimov",
+                phone: "+998 93 111 22 33",
+                tg: "@olim_tracker"
+            },
+            {
+                id: 10,
+                title: "BYD Chazor 05 DM-i Champion",
+                category: "budget",
+                brand: "BYD",
+                model: "Chazor 05",
+                year: 2024,
+                price: 18700,
+                mileage: 8000,
+                engine: "1.5L DM-i Super Hybrid (180 ot kuchi)",
+                fuel: "Gibrid",
+                transmission: "E-CVT",
+                color: "Space Gray (Kulrang)",
+                city: "Toshkent shahri",
+                desc: "100 km ga 3.8 litr sarflaydigan eng ommabop gibrid. 1200+ km bitta zapravkada yuradi. Aylanuvchi 12.8 dyuym ekran.",
+                image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1000&q=80",
+                seller: "Shaxzod Bekchanov",
+                phone: "+998 90 888 77 66",
+                tg: "@shaxzod_byd"
+            },
+
+            // MOTORCYCLES
+            {
+                id: 11,
+                title: "Kawasaki Ninja ZX-10R KRT Edition",
+                category: "moto",
+                brand: "Kawasaki",
+                model: "Ninja ZX-10R",
+                year: 2024,
+                price: 19800,
+                mileage: 1200,
+                engine: "998cc 4-silindrli DOHC (203 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-tezlikli Quickshifter",
+                color: "Lime Green / Ebony",
+                city: "Toshkent shahri",
+                desc: "WorldSBK chempioni texnologiyasiga ega super mototsikl. Brembo Stylema tormoz tizimi, TFT rangli displey, kruiz nazorati.",
+                image: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1000&q=80",
+                seller: "XON_MOTO SuperBikes",
+                phone: "+998 90 777 00 03",
+                tg: "@xon_moto_bikes"
+            },
+            {
+                id: 12,
+                title: "BMW S 1000 RR M Sport Package",
+                category: "moto",
+                brand: "BMW",
+                model: "S 1000 RR",
+                year: 2024,
+                price: 24500,
+                mileage: 900,
+                engine: "999cc ShiftCam 4-silindrli (210 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-tezlikli Pro Quickshifter",
+                color: "Lightwhite / M Motorsport",
+                city: "Toshkent shahri",
+                desc: "M Karbon diskalar, Akrapovic titan glushitel, Dynamic Damping Control (DDC), Race Pro rejimlari, aerodinamik qanotlar.",
+                image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1000&q=80",
+                seller: "Javohir Moto",
+                phone: "+998 97 700 88 99",
+                tg: "@javohir_bmwmoto"
+            },
+            {
+                id: 13,
+                title: "Yamaha YZF-R1 Monster Energy",
+                category: "moto",
+                brand: "Yamaha",
+                model: "YZF-R1",
+                year: 2023,
+                price: 18500,
+                mileage: 3400,
+                engine: "998cc Crossplane CP4 (200 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-tezlikli Mexanika",
+                color: "Monster Energy Black/Blue",
+                city: "Samarqand shahri",
+                desc: "MotoGP texnologiyasiga asoslangan krosspleyn dvigatel. Betakror ovoz, lift control, ABS va qulashga qarshi slayderlar.",
+                image: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1000&q=80",
+                seller: "Temur Karimov",
+                phone: "+998 93 300 44 55",
+                tg: "@temur_r1"
+            },
+            {
+                id: 14,
+                title: "Harley-Davidson Fat Boy 114",
+                category: "moto",
+                brand: "Harley-Davidson",
+                model: "Fat Boy 114",
+                year: 2023,
+                price: 22900,
+                mileage: 4100,
+                engine: "1868cc Milwaukee-Eight 114 V-Twin (94 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-tezlikli Cruise Drive",
+                color: "Vivid Black (Yaltiroq qora)",
+                city: "Toshkent shahri",
+                desc: "Afsonaviy 'Terminator' uslubidagi chopper! 240mm keng orqa balon, xrom detallar, gumburlagan V-Twin drayvi, Vance & Hines ovoz tizimi.",
+                image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?auto=format&fit=crop&w=1000&q=80",
+                seller: "XON_MOTO Cruisers",
+                phone: "+998 90 777 00 04",
+                tg: "@xon_moto_bikes"
+            },
+            {
+                id: 15,
+                title: "Ducati Panigale V4 S",
+                category: "moto",
+                brand: "Ducati",
+                model: "Panigale V4 S",
+                year: 2024,
+                price: 31500,
+                mileage: 1500,
+                engine: "1103cc Desmosedici Stradale V4 (215.5 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "6-tezlikli Quick Shift EVO 2",
+                color: "Ducati Red (Qizil)",
+                city: "Toshkent shahri",
+                desc: "Italiya durdonasi. Ohlins elektron podveska, Marchesini alyuminiy diskalar, aerodinamik qanotlar. 100 km/soat ga 2.9 soniya.",
+                image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?auto=format&fit=crop&w=1000&q=80",
+                seller: "XON_MOTO VIP Salon",
+                phone: "+998 90 777 00 01",
+                tg: "@xon_moto_vip"
+            },
+            {
+                id: 16,
+                title: "Vespa GTS SuperTech 300 HPE",
+                category: "moto",
+                brand: "Vespa",
+                model: "GTS SuperTech 300",
+                year: 2024,
+                price: 8200,
+                mileage: 500,
+                engine: "278cc 4-taktli HPE (24 ot kuchi)",
+                fuel: "Benzin",
+                transmission: "Avtomat Variator (CVT)",
+                color: "Grigio Ottanio (Nafis Moviy-Kulrang)",
+                city: "Toshkent shahri",
+                desc: "Italiyaning eng mashhur premium shahar skuteri. TFT displey, navigatsiya, ABS, to'liq LED chiroqlar, nihoyatda qulay.",
+                image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1000&q=80",
+                seller: "Shahnoza Karimova",
+                phone: "+998 91 234 56 78",
+                tg: "@shahnoza_vespa"
+            }
+        ];
+
+        // State
+        let vehicles = JSON.parse(localStorage.getItem('xon_moto_data')) || initialVehicles;
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let maxPriceFilter = null;
+
+        function saveToStorage() {
+            localStorage.setItem('xon_moto_data', JSON.stringify(vehicles));
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
+
+        function updateCategoryCounts() {
+            const luxury = vehicles.filter(v => v.category === 'luxury').length;
+            const budget = vehicles.filter(v => v.category === 'budget').length;
+            const moto = vehicles.filter(v => v.category === 'moto').length;
+            
+            document.getElementById('luxuryCountBadge').textContent = `${luxury} ta model`;
+            document.getElementById('budgetCountBadge').textContent = `${budget} ta model`;
+            document.getElementById('motoCountBadge').textContent = `${moto} ta model`;
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            
+            // Tab stillari
+            const tabs = { all: 'tabAll', luxury: 'tabLuxury', budget: 'tabBudget', moto: 'tabMoto' };
+            Object.keys(tabs).forEach(k => {
+                const btn = document.getElementById(tabs[k]);
+                if (k === cat) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-black";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white";
+                }
+            });
+
+            // Sarlavha
+            const titles = {
+                all: "XON_MOTO Bozor Vitrinasi",
+                luxury: "👑 Qimmatbaho Hashamatli Mashinalar",
+                budget: "💰 Hamyonbop Xalqona Mashinalar",
+                moto: "🏍️ Mototsikllar va Skuterlar"
+            };
+            document.getElementById('sectionTitle').textContent = titles[cat] || titles.all;
+
+            renderVehicles();
+
+            // Scroll to marketplace smoothly
+            document.getElementById('marketplace').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function quickSearch(word) {
+            document.getElementById('heroSearch').value = word;
+            applyHeroFilter();
+        }
+
+        function applyHeroFilter() {
+            const cat = document.getElementById('heroCategory').value;
+            searchQuery = document.getElementById('heroSearch').value.trim().toLowerCase();
+            const maxP = document.getElementById('heroMaxPrice').value;
+            maxPriceFilter = maxP ? parseFloat(maxP) : null;
+            currentCategory = cat;
+            filterCategory(cat);
+        }
+
+        function resetFilters() {
+            currentCategory = 'all';
+            searchQuery = '';
+            maxPriceFilter = null;
+            document.getElementById('heroSearch').value = '';
+            document.getElementById('heroMaxPrice').value = '';
+            document.getElementById('heroCategory').value = 'all';
+            filterCategory('all');
+        }
+
+        function renderVehicles() {
+            const grid = document.getElementById('vehicleGrid');
+            const emptyState = document.getElementById('emptyState');
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filtered = vehicles.filter(v => {
+                const matchesCat = (currentCategory === 'all' || v.category === currentCategory);
+                const matchesSearch = !searchQuery || 
+                    v.title.toLowerCase().includes(searchQuery) || 
+                    v.brand.toLowerCase().includes(searchQuery) || 
+                    v.model.toLowerCase().includes(searchQuery) ||
+                    v.city.toLowerCase().includes(searchQuery);
+                const matchesPrice = !maxPriceFilter || v.price <= maxPriceFilter;
+                return matchesCat && matchesSearch && matchesPrice;
+            });
+
+            // Saralash
+            if (sortBy === 'price_asc') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'price_desc') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sortBy === 'year_desc') {
+                filtered.sort((a, b) => b.year - a.year);
+            } else {
+                filtered.sort((a, b) => b.id - a.id);
+            }
+
+            document.getElementById('totalFoundBadge').textContent = `${filtered.length} ta`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            grid.innerHTML = filtered.map(v => {
+                let badgeClass = 'badge-budget';
+                let badgeText = '<i class="fas fa-tag mr-1"></i> Hamyonbop';
+                let priceColor = 'text-emerald-400';
+
+                if (v.category === 'luxury') {
+                    badgeClass = 'badge-luxury';
+                    badgeText = '<i class="fas fa-crown mr-1"></i> VIP Qimmat';
+                    priceColor = 'text-amber-400';
+                } else if (v.category === 'moto') {
+                    badgeClass = 'badge-moto';
+                    badgeText = '<i class="fas fa-motorcycle mr-1"></i> MOTO';
+                    priceColor = 'text-indigo-400';
+                }
+
+                const priceSom = formatNumber(v.price * 12850);
+
+                return `
+                <div class="car-card glass-panel rounded-2xl overflow-hidden flex flex-col cursor-pointer" onclick="openDetailModal(${v.id})">
+                    <div class="relative h-48 overflow-hidden bg-dark-800">
+                        <img src="${v.image}" alt="${v.title}" class="w-full h-full object-cover transition-transform duration-500">
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] ${badgeClass}">${badgeText}</span>
+                        <span class="absolute top-3 right-3 px-2 py-0.5 rounded-lg text-xs bg-black/75 backdrop-blur-md text-white font-bold">${v.year}</span>
+                    </div>
+
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                                <span class="font-bold uppercase tracking-wider text-amber-500">${v.brand}</span>
+                                <span><i class="fas fa-map-marker-alt text-[10px] text-amber-500 mr-1"></i> ${v.city}</span>
+                            </div>
+                            <h3 class="text-base font-bold text-white hover:text-amber-400 transition truncate">${v.title}</h3>
+
+                            <div class="grid grid-cols-2 gap-2 my-3 text-xs text-slate-300 bg-dark-700/60 p-2.5 rounded-xl border border-slate-700/50">
+                                <div class="truncate"><i class="fas fa-tachometer-alt text-amber-400 mr-1 text-[10px]"></i> ${formatNumber(v.mileage)} km</div>
+                                <div class="truncate"><i class="fas fa-gas-pump text-amber-400 mr-1 text-[10px]"></i> ${v.fuel}</div>
+                                <div class="truncate col-span-2"><i class="fas fa-cogs text-amber-400 mr-1 text-[10px]"></i> ${v.engine}</div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+                            <div>
+                                <div class="text-xl font-extrabold ${priceColor}">$${formatNumber(v.price)}</div>
+                                <div class="text-[10px] text-slate-400">~${priceSom} so'm</div>
+                            </div>
+                            <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-black border border-amber-500/30 transition">
+                                Ko'rish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Detail Modal
+        function openDetailModal(id) {
+            const v = vehicles.find(item => item.id === id);
+            if (!v) return;
+
+            document.getElementById('modalImage').src = v.image;
+            document.getElementById('modalBrand').textContent = v.brand;
+            document.getElementById('modalTitle').textContent = v.title;
+            document.getElementById('modalPrice').textContent = `$${formatNumber(v.price)}`;
+            document.getElementById('modalPriceSom').textContent = `~${formatNumber(v.price * 12850)} so'm`;
+            document.getElementById('modalYear').textContent = `${v.year}-yil`;
+            document.getElementById('modalMileage').textContent = `${formatNumber(v.mileage)} km`;
+            document.getElementById('modalFuel').textContent = v.fuel;
+            document.getElementById('modalTrans').textContent = v.transmission;
+            document.getElementById('modalColor').textContent = v.color;
+            document.getElementById('modalCity').textContent = v.city;
+            document.getElementById('modalDesc').textContent = v.desc || "Batafsil ma'lumot berilmagan.";
+            document.getElementById('modalSellerName').textContent = v.seller;
+            document.getElementById('modalCallBtn').href = `tel:${v.phone}`;
+            document.getElementById('modalTgBtn').href = v.tg ? `https://t.me/${v.tg.replace('@', '')}` : '#';
+
+            const badge = document.getElementById('modalBadge');
+            if (v.category === 'luxury') {
+                badge.className = 'px-3 py-1 rounded-xl text-xs font-bold badge-luxury';
+                badge.innerHTML = '<i class="fas fa-crown mr-1"></i> VIP Qimmatbaho';
+            } else if (v.category === 'budget') {
+                badge.className = 'px-3 py-1 rounded-xl text-xs font-bold badge-budget';
+                badge.innerHTML = '<i class="fas fa-wallet mr-1"></i> Hamyonbop Mashina';
+            } else {
+                badge.className = 'px-3 py-1 rounded-xl text-xs font-bold badge-moto';
+                badge.innerHTML = '<i class="fas fa-motorcycle mr-1"></i> Mototsikl';
+            }
+
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Add Listing Modal
+        function openAddModal() {
+            const modal = document.getElementById('addModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAddModal() {
+            const modal = document.getElementById('addModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleAddNewVehicle(e) {
+            e.preventDefault();
+            const category = document.getElementById('newCategory').value;
+            const brand = document.getElementById('newBrand').value.trim();
+            const model = document.getElementById('newModel').value.trim();
+            const year = parseInt(document.getElementById('newYear').value) || 2024;
+            const price = parseInt(document.getElementById('newPrice').value) || 0;
+            const mileage = parseInt(document.getElementById('newMileage').value) || 0;
+            const engine = document.getElementById('newEngine').value.trim() || 'Standart';
+            const fuel = document.getElementById('newFuel').value;
+            const color = document.getElementById('newColor').value.trim() || 'Oq';
+            let image = document.getElementById('newImageUrl').value.trim();
+            const seller = document.getElementById('newSellerName').value.trim();
+            const phone = document.getElementById('newSellerPhone').value.trim();
+            const city = document.getElementById('newCity').value.trim() || 'Toshkent shahri';
+            const desc = document.getElementById('newDesc').value.trim();
+
+            if (!image) {
+                if (category === 'moto') {
+                    image = "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1000&q=80";
+                } else if (category === 'luxury') {
+                    image = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80";
+                } else {
+                    image = "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1000&q=80";
+                }
+            }
+
+            const newVehicle = {
+                id: Date.now(),
+                title: `${brand} ${model} ${year}`,
+                category: category,
+                brand: brand,
+                model: model,
+                year: year,
+                price: price,
+                mileage: mileage,
+                engine: engine,
+                fuel: fuel,
+                transmission: "Avtomat",
+                color: color,
+                city: city,
+                desc: desc || "E'lon beruvchi tomonidan qo'shilgan yangi transport vositasi.",
+                image: image,
+                seller: seller,
+                phone: phone,
+                tg: "@xon_moto"
+            };
+
+            vehicles.unshift(newVehicle);
+            saveToStorage();
+            updateCategoryCounts();
+            renderVehicles();
+            closeAddModal();
+            document.getElementById('addForm').reset();
+            showToast("E'loningiz XON_MOTO bozoriga muvaffaqiyatli qo'shildi!");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Credit Calculator Logic
+        function initCalculator() {
+            const priceInput = document.getElementById('calcPrice');
+            const initialRange = document.getElementById('calcInitialPercent');
+            const initialLabel = document.getElementById('initialPercentLabel');
+            const termSelect = document.getElementById('calcTermMonths');
+            const rateInput = document.getElementById('calcInterestRate');
+
+            function calculate() {
+                const price = parseFloat(priceInput.value) || 0;
+                const initialPercent = parseFloat(initialRange.value) || 30;
+                const months = parseInt(termSelect.value) || 36;
+                const annualRate = parseFloat(rateInput.value) || 18;
+
+                initialLabel.textContent = `${initialPercent}%`;
+
+                const initialAmount = price * (initialPercent / 100);
+                const loanAmount = Math.max(0, price - initialAmount);
+
+                let monthlyPayment = 0;
+                let totalPayment = 0;
+
+                if (loanAmount > 0 && months > 0) {
+                    const monthlyRate = (annualRate / 100) / 12;
+                    if (monthlyRate > 0) {
+                        monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+                    } else {
+                        monthlyPayment = loanAmount / months;
+                    }
+                    totalPayment = initialAmount + (monthlyPayment * months);
+                } else {
+                    totalPayment = price;
+                }
+
+                document.getElementById('resMonthlyPayment').textContent = `$${formatNumber(Math.round(monthlyPayment))}`;
+                document.getElementById('resInitialSum').textContent = `$${formatNumber(Math.round(initialAmount))}`;
+                document.getElementById('resCreditSum').textContent = `$${formatNumber(Math.round(loanAmount))}`;
+                document.getElementById('resTotalPayment').textContent = `$${formatNumber(Math.round(totalPayment))}`;
+            }
+
+            priceInput.addEventListener('input', calculate);
+            initialRange.addEventListener('input', calculate);
+            termSelect.addEventListener('change', calculate);
+            rateInput.addEventListener('input', calculate);
+
+            calculate();
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCategoryCounts();
+            renderVehicles();
+            initCalculator();
+        });
+    </script>
+</body>
+</html>

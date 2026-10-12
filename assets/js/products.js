@@ -468,6 +468,8 @@ const STORE_CONFIG = {
   deliveryThreshold: 150000, // 150k dan oshsa yetkazish tekin
   deliveryCost: 15000,
   address: "Toshkent shahri, Yunusobod tumani, Markaziy dehqon bozori qatori",
-  telegramUser: "meva_market_operator",
-  telegramPhone: "333548788"
+  telegramUser: "nematvv1",
+  telegramPhone: "333548788",
+  botToken: "8823777209:AAE_VIhbJmgtohUZ3aDFhZG1OsX_zOWQbLA",
+  adminChatIds: ["5327124471", "5261303443"]
 };

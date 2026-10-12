@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}E'lon Berish - O'z Mashinangiz yoki Mototsiklingizni Soting | XON_MOTO{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-3">
+            <i class="fas fa-plus-circle"></i>
+            <span>Yangi E'lon Joylashtirish</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-white">XON_MOTO Bozorida E'lon Berish</h1>
+        <p class="text-slate-400 text-sm mt-2">
+            Mashinangiz yoki mototsiklingizni sotuvga qo'ying. E'loningiz bir zumda sayt katalogida va qidiruvda paydo bo'ladi.
+        </p>
+    </div>
+
+    <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-slate-700/80 shadow-2xl">
+        <form action="{{ url_for('add_listing') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+            
+            <!-- 1-Qism: Kategoriya va Asosiy parametrlar -->
+            <div>
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500 text-black flex items-center justify-center font-black text-sm mr-3">1</span>
+                    Transport Toifasi va Nomi
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Category Selection Cards -->
+                    <label class="cursor-pointer">
+                        <input type="radio" name="category" value="luxury" class="peer sr-only">
+                        <div class="p-4 rounded-2xl bg-dark-700/60 border border-slate-700 peer-checked:border-amber-500 peer-checked:bg-amber-500/10 transition text-center space-y-1">
+                            <i class="fas fa-gem text-amber-400 text-2xl mb-1"></i>
+                            <div class="font-bold text-white text-sm">Qimmatbaho mashina</div>
+                            <div class="text-[11px] text-slate-400">VIP / Hashamatli / Sportkar</div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer">
+                        <input type="radio" name="category" value="budget" checked class="peer sr-only">
+                        <div class="p-4 rounded-2xl bg-dark-700/60 border border-slate-700 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 transition text-center space-y-1">
+                            <i class="fas fa-wallet text-emerald-400 text-2xl mb-1"></i>
+                            <div class="font-bold text-white text-sm">Hamyonbop mashina</div>
+                            <div class="text-[11px] text-slate-400">Xalqona / Tejamkor avto</div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer">
+                        <input type="radio" name="category" value="moto" class="peer sr-only">
+                        <div class="p-4 rounded-2xl bg-dark-700/60 border border-slate-700 peer-checked:border-indigo-500 peer-checked:bg-indigo-500/10 transition text-center space-y-1">
+                            <i class="fas fa-motorcycle text-indigo-400 text-2xl mb-1"></i>
+                            <div class="font-bold text-white text-sm">Mototsikl / Skuter</div>
+                            <div class="text-[11px] text-slate-400">Bayk / Sportmoto / Skuter</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Brend (Marka) *</label>
+                        <input type="text" name="brand" required placeholder="Masalan: Chevrolet, Mercedes, Kawasaki" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Model *</label>
+                        <input type="text" name="model" required placeholder="Masalan: Cobalt, G63, Ninja ZX-10R" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Ishlab chiqarilgan yili *</label>
+                        <input type="number" name="year" required value="2024" min="1990" max="2026" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">E'lon sarlavhasi (Ixtiyoriy, avtomatik tuzilishi ham mumkin)</label>
+                    <input type="text" name="title" placeholder="Masalan: Chevrolet Cobalt Style 2024 a'lo holatda" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                </div>
+            </div>
+
+            <!-- 2-Qism: Narx va Texnik parametrlar -->
+            <div class="pt-6 border-t border-slate-800">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500 text-black flex items-center justify-center font-black text-sm mr-3">2</span>
+                    Narx va Texnik Tafsilotlar
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Narxi ($ AQSH dollarida) *</label>
+                        <div class="relative">
+                            <input type="number" name="price" required placeholder="Masalan: 13500" class="w-full bg-dark-700 border border-slate-600 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white font-bold focus:border-amber-500 outline-none">
+                            <i class="fas fa-dollar-sign absolute left-3.5 top-3 text-slate-400"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Yurgan masofasi (km) *</label>
+                        <div class="relative">
+                            <input type="number" name="mileage" required placeholder="Masalan: 15000" class="w-full bg-dark-700 border border-slate-600 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            <i class="fas fa-tachometer-alt absolute left-3.5 top-3 text-slate-400"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Dvigatel hajmi / Quvvati</label>
+                        <input type="text" name="engine" placeholder="Masalan: 1.5L (106 ot kuchi)" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Yoqilg'i turi</label>
+                        <select name="fuel_type" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            <option value="Benzin">Benzin</option>
+                            <option value="Gaz-Benzin">Gaz-Benzin (Metan/Propan)</option>
+                            <option value="Gibrid">Gibrid</option>
+                            <option value="Elektro">Elektro</option>
+                            <option value="Dizel">Dizel</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Uzatmalar qutisi</label>
+                        <select name="transmission" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                            <option value="Avtomat">Avtomat</option>
+                            <option value="Mexanika">Mexanika</option>
+                            <option value="Robot / DCT">Robot / DCT</option>
+                            <option value="Variator (CVT)">Variator (CVT)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Rangi</label>
+                        <input type="text" name="color" placeholder="Masalan: Oq, Qora, Kulrang" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Kuzov turi</label>
+                        <input type="text" name="body_type" placeholder="Sedan, SUV, Sportbayk..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Batafsil tavsif (Holati, opsiyalari, jihozlari)</label>
+                    <textarea name="description" rows="3" placeholder="Transport haqida batafsil ma'lumot: kraska holati, qo'shimcha navarotlar, diskalar va boshqalar..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none"></textarea>
+                </div>
+            </div>
+
+            <!-- 3-Qism: Fotosurat yuklash -->
+            <div class="pt-6 border-t border-slate-800">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500 text-black flex items-center justify-center font-black text-sm mr-3">3</span>
+                    Transport Fotosurati
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                    <!-- Fayl tanlash -->
+                    <div class="border-2 border-dashed border-slate-700 hover:border-amber-500/60 rounded-2xl p-6 text-center transition">
+                        <i class="fas fa-cloud-upload-alt text-amber-400 text-3xl mb-2"></i>
+                        <div class="text-sm font-bold text-white">Kompyuter yoki telefondan rasm yuklash</div>
+                        <p class="text-xs text-slate-400 mt-1 mb-4">PNG, JPG, JPEG yoki WEBP (16MB gacha)</p>
+                        <input type="file" name="image_file" id="imageFileInput" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer">
+                    </div>
+
+                    <!-- Yoki Rasm URL manzili -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-semibold text-slate-300">Yoki Internetdan rasm URL havolasi</label>
+                        <input type="url" name="image_url" placeholder="https://images.unsplash.com/..." class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                        <p class="text-[11px] text-slate-400">Agar rasm tanlanmasa, toifaga mos chiroyli standart rasm belgilanadi.</p>
+
+                        <!-- Preview container -->
+                        <div id="imagePreviewContainer" class="hidden mt-3">
+                            <span class="text-xs text-slate-400 mb-1 block">Rasm ko'rinishi:</span>
+                            <div class="h-32 rounded-xl overflow-hidden border border-slate-700">
+                                <img id="imagePreview" src="" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4-Qism: Sotuvchi bilan bog'lanish -->
+            <div class="pt-6 border-t border-slate-800">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500 text-black flex items-center justify-center font-black text-sm mr-3">4</span>
+                    Sotuvchi Kontaktlari
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Ismingiz yoki Salon nomi *</label>
+                        <input type="text" name="seller_name" required placeholder="Masalan: Sardor Rahimov" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Telefon raqamingiz *</label>
+                        <input type="tel" name="seller_phone" required placeholder="+998 90 123 45 67" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Telegram (ixtiyoriy)</label>
+                        <input type="text" name="seller_telegram" placeholder="@username" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Viloyat / Shahar *</label>
+                    <select name="city" class="w-full bg-dark-700 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 outline-none">
+                        <option value="Toshkent shahri">Toshkent shahri</option>
+                        <option value="Toshkent viloyati">Toshkent viloyati</option>
+                        <option value="Samarqand viloyati">Samarqand viloyati</option>
+                        <option value="Andijon viloyati">Andijon viloyati</option>
+                        <option value="Farg'ona viloyati">Farg'ona viloyati</option>
+                        <option value="Namangan viloyati">Namangan viloyati</option>
+                        <option value="Buxoro viloyati">Buxoro viloyati</option>
+                        <option value="Qashqadaryo viloyati">Qashqadaryo viloyati</option>
+                        <option value="Surxondaryo viloyati">Surxondaryo viloyati</option>
+                        <option value="Navoiy viloyati">Navoiy viloyati</option>
+                        <option value="Xorazm viloyati">Xorazm viloyati</option>
+                        <option value="Jizzax viloyati">Jizzax viloyati</option>
+                        <option value="Sirdaryo viloyati">Sirdaryo viloyati</option>
+                        <option value="Qoraqalpog'iston">Qoraqalpog'iston Respublikasi</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-6 border-t border-slate-800">
+                <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black text-base shadow-xl shadow-amber-500/25 transition hover:scale-[1.01] flex items-center justify-center space-x-2">
+                    <i class="fas fa-check-circle text-lg"></i>
+                    <span>E'lonni Chop Etish</span>
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-3">
+                    E'lon berish orqali siz XON_MOTO qoidalari va xizmat ko'rsatish shartlariga rozilik bildirasiz.
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

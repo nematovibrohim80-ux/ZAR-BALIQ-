@@ -1,0 +1,130 @@
+/* XON_MOTO Custom Luxury Car & Moto Theme */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --primary-gold: #f59e0b;
+  --primary-gold-dark: #d97706;
+  --accent-red: #ef4444;
+  --bg-dark: #0a0d14;
+  --bg-card: #111622;
+  --bg-card-hover: #172033;
+  --border-glow: rgba(245, 158, 11, 0.25);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--bg-dark);
+  color: #f1f5f9;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .brand-font {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0d121c;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Glassmorphism & Cards */
+.glass-panel {
+  background: rgba(17, 22, 34, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-nav {
+  background: rgba(10, 13, 20, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.car-card {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #111622;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.car-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.15);
+}
+
+.car-card:hover .car-img {
+  transform: scale(1.05);
+}
+
+.car-img {
+  transition: transform 0.5s ease;
+}
+
+/* Glow effects */
+.gold-glow {
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.gold-border-glow {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+/* Badges */
+.badge-luxury {
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+.badge-budget {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.badge-moto {
+  background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Hero background animation */
+.hero-gradient {
+  background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.15) 0%, rgba(10, 13, 20, 0.98) 70%);
+}
+
+/* Animated gradient text */
+.gradient-gold-text {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Flash message animation */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.alert-animated {
+  animation: fadeInDown 0.4s ease-out forwards;
+}

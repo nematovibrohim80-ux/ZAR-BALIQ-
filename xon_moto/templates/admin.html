@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Boshqaruv Paneli (Admin) - XON_MOTO{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-8 border-b border-slate-800 gap-4">
+        <div>
+            <div class="inline-flex items-center space-x-2 text-amber-500 text-xs font-bold uppercase tracking-wider mb-1">
+                <i class="fas fa-shield-alt"></i>
+                <span>Moderatsiya va Boshqaruv</span>
+            </div>
+            <h1 class="text-3xl font-black text-white">XON_MOTO E'lonlar Boshqaruvi</h1>
+            <p class="text-slate-400 text-sm mt-1">Barcha faol e'lonlarni ko'rish, tekshirish va boshqarish</p>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <a href="{{ url_for('add_listing') }}" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-black flex items-center space-x-2 transition">
+                <i class="fas fa-plus"></i>
+                <span>Yangi e'lon qo'shish</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistika kartochkalari -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-8">
+        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
+            <div class="text-xs text-slate-400 font-semibold uppercase">Jami e'lonlar</div>
+            <div class="text-3xl font-black text-white mt-1">{{ stats.total }}</div>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-amber-500/30">
+            <div class="text-xs text-amber-400 font-semibold uppercase">Qimmatbaho mashinalar</div>
+            <div class="text-3xl font-black text-amber-400 mt-1">{{ stats.luxury }}</div>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-emerald-500/30">
+            <div class="text-xs text-emerald-400 font-semibold uppercase">Hamyonbop mashinalar</div>
+            <div class="text-3xl font-black text-emerald-400 mt-1">{{ stats.budget }}</div>
+        </div>
+
+        <div class="glass-panel p-5 rounded-2xl border border-indigo-500/30">
+            <div class="text-xs text-indigo-400 font-semibold uppercase">Mototsikllar</div>
+            <div class="text-3xl font-black text-indigo-400 mt-1">{{ stats.moto }}</div>
+        </div>
+    </div>
+
+    <!-- E'lonlar ro'yxati jadvali -->
+    <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800">
+        <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <h2 class="text-lg font-bold text-white">Faol E'lonlar Ro'yxati</h2>
+            <span class="text-xs text-slate-400">Jami: {{ vehicles|length }} ta</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-slate-300">
+                <thead class="bg-dark-700/60 text-xs uppercase text-slate-400 font-bold border-b border-slate-800">
+                    <tr>
+                        <th class="px-6 py-4">Transport</th>
+                        <th class="px-6 py-4">Toifasi</th>
+                        <th class="px-6 py-4">Narxi ($)</th>
+                        <th class="px-6 py-4">Yili / Masofasi</th>
+                        <th class="px-6 py-4">Sotuvchi & Telefon</th>
+                        <th class="px-6 py-4">Shahar</th>
+                        <th class="px-6 py-4 text-right">Amallar</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800">
+                    {% for v in vehicles %}
+                    <tr class="hover:bg-dark-700/40 transition">
+                        <!-- Transport va rasm -->
+                        <td class="px-6 py-4 flex items-center space-x-3">
+                            <img src="{{ v.image_url }}" alt="{{ v.title }}" class="w-14 h-10 rounded-lg object-cover bg-dark-700">
+                            <div>
+                                <a href="{{ url_for('vehicle_detail', vehicle_id=v.id) }}" class="font-bold text-white hover:text-amber-400 transition block">
+                                    {{ v.title }}
+                                </a>
+                                <span class="text-xs text-slate-500">ID: #{{ v.id }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Toifa -->
+                        <td class="px-6 py-4">
+                            {% if v.category == 'luxury' %}
+                            <span class="px-2.5 py-1 rounded-md text-[11px] badge-luxury">👑 Qimmatbaho</span>
+                            {% elif v.category == 'budget' %}
+                            <span class="px-2.5 py-1 rounded-md text-[11px] badge-budget">💰 Hamyonbop</span>
+                            {% else %}
+                            <span class="px-2.5 py-1 rounded-md text-[11px] badge-moto">🏍️ Mototsikl</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Narx -->
+                        <td class="px-6 py-4 font-bold text-amber-400 text-base">
+                            ${{ v.price | format_price }}
+                        </td>
+
+                        <!-- Yili va probegi -->
+                        <td class="px-6 py-4 text-xs">
+                            <div class="text-white font-semibold">{{ v.year }}-yil</div>
+                            <div class="text-slate-400">{{ v.mileage | format_price }} km</div>
+                        </td>
+
+                        <!-- Sotuvchi -->
+                        <td class="px-6 py-4 text-xs">
+                            <div class="text-white font-semibold">{{ v.seller_name }}</div>
+                            <a href="tel:{{ v.seller_phone }}" class="text-amber-400 hover:underline">{{ v.seller_phone }}</a>
+                        </td>
+
+                        <!-- Shahar -->
+                        <td class="px-6 py-4 text-xs text-slate-400">
+                            {{ v.city }}
+                        </td>
+
+                        <!-- Amallar -->
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a href="{{ url_for('vehicle_detail', vehicle_id=v.id) }}" class="p-2 rounded-lg bg-dark-700 text-slate-300 hover:text-white hover:bg-slate-700 transition inline-block" title="Ko'rish">
+                                <i class="fas fa-eye text-xs"></i>
+                            </a>
+                            <form action="{{ url_for('delete_vehicle_route', vehicle_id=v.id) }}" method="POST" class="inline-block" onsubmit="return confirm('Haqiqatdan ham ushbu e\'lonni o\'chirmoqchimisiz?');">
+                                <button type="submit" class="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white transition" title="O'chirish">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

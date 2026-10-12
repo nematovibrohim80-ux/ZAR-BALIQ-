@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}XON_MOTO - Qimmatbaho & Hamyonbop Mashinalar va Mototsikllar Bozori{% endblock %}</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309'
+                        },
+                        dark: {
+                            900: '#0a0d14',
+                            800: '#111622',
+                            700: '#172033',
+                            600: '#232f48'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-dark-900 text-slate-100 flex flex-col min-h-screen selection:bg-amber-500 selection:text-black">
+
+    <!-- Top Notification Bar -->
+    <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 text-black text-xs font-semibold py-1.5 px-4 text-center">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <span class="hidden md:inline"><i class="fas fa-gem mr-1"></i> XON_MOTO — O'zbekistonning eng ishonchli premium va hamyonbop avto-moto platformasi!</span>
+            <span class="mx-auto md:mx-0"><i class="fas fa-fire mr-1 text-red-700 animate-pulse"></i> O'z mashinangiz yoki motosiklingizni bepul sotuvga qo'ying!</span>
+            <div class="hidden md:flex items-center space-x-3 text-black">
+                <a href="tel:+998907770000" class="hover:underline font-bold"><i class="fas fa-phone mr-1"></i> +998 90 777 00 00</a>
+                <span>|</span>
+                <a href="https://t.me" target="_blank" class="hover:underline font-bold"><i class="fab fa-telegram-plane mr-1"></i> @xon_moto</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 glass-nav transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="{{ url_for('index') }}" class="flex items-center space-x-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-black font-black text-2xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center">
+                            <span class="brand-font text-2xl sm:text-3xl font-black tracking-wider text-white">XON</span>
+                            <span class="brand-font text-2xl sm:text-3xl font-black tracking-wider text-amber-500 ml-1.5">MOTO</span>
+                        </div>
+                        <p class="text-[10px] tracking-widest uppercase text-slate-400 font-medium">Bozor & Avtosalon</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden lg:flex items-center space-x-1 xl:space-x-2">
+                    <a href="{{ url_for('index') }}" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-amber-400 hover:bg-white/5 transition">
+                        Bosh sahifa
+                    </a>
+                    <a href="{{ url_for('catalog') }}" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-amber-400 hover:bg-white/5 transition">
+                        Barcha e'lonlar
+                    </a>
+                    <a href="{{ url_for('catalog', category='luxury') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-amber-400 hover:bg-amber-400/10 transition flex items-center space-x-1.5">
+                        <i class="fas fa-gem text-xs"></i>
+                        <span>Qimmatbaho</span>
+                    </a>
+                    <a href="{{ url_for('catalog', category='budget') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-emerald-400 hover:bg-emerald-400/10 transition flex items-center space-x-1.5">
+                        <i class="fas fa-wallet text-xs"></i>
+                        <span>Hamyonbop</span>
+                    </a>
+                    <a href="{{ url_for('catalog', category='moto') }}" class="px-3 py-2 rounded-lg text-sm font-medium text-indigo-400 hover:bg-indigo-400/10 transition flex items-center space-x-1.5">
+                        <i class="fas fa-motorcycle text-xs"></i>
+                        <span>Mototsikllar</span>
+                    </a>
+                    <a href="{{ url_for('calculator') }}" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-amber-400 hover:bg-white/5 transition">
+                        Kredit hisoblash
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="px-3 py-2 rounded-lg text-sm font-medium hover:text-amber-400 hover:bg-white/5 transition">
+                        Aloqa
+                    </a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <a href="{{ url_for('add_listing') }}" class="px-4 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-lg shadow-amber-500/25 flex items-center space-x-2 transition hover:-translate-y-0.5">
+                        <i class="fas fa-plus-circle text-base"></i>
+                        <span>E'lon berish</span>
+                    </a>
+                    <a href="{{ url_for('admin') }}" title="Boshqaruv paneli" class="w-10 h-10 rounded-xl bg-dark-800 border border-slate-700/60 hover:border-amber-500/50 flex items-center justify-center text-slate-300 hover:text-amber-400 transition">
+                        <i class="fas fa-sliders-h text-sm"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center sm:hidden space-x-2">
+                    <a href="{{ url_for('add_listing') }}" class="px-3 py-2 rounded-lg text-xs font-bold bg-amber-500 text-black">
+                        + E'lon
+                    </a>
+                    <button id="mobileMenuBtn" class="p-2 rounded-lg bg-dark-800 border border-slate-700 text-slate-300 hover:text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-800 bg-dark-800/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-2">
+            <a href="{{ url_for('index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-200 hover:bg-slate-700/50">
+                <i class="fas fa-home mr-2 text-amber-500"></i> Bosh sahifa
+            </a>
+            <a href="{{ url_for('catalog') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-200 hover:bg-slate-700/50">
+                <i class="fas fa-th-large mr-2 text-amber-500"></i> Barcha e'lonlar
+            </a>
+            <a href="{{ url_for('catalog', category='luxury') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-amber-400 hover:bg-amber-400/10">
+                <i class="fas fa-gem mr-2"></i> Qimmatbaho mashinalar
+            </a>
+            <a href="{{ url_for('catalog', category='budget') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-emerald-400 hover:bg-emerald-400/10">
+                <i class="fas fa-wallet mr-2"></i> Hamyonbop mashinalar
+            </a>
+            <a href="{{ url_for('catalog', category='moto') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-indigo-400 hover:bg-indigo-400/10">
+                <i class="fas fa-motorcycle mr-2"></i> Mototsikllar
+            </a>
+            <a href="{{ url_for('calculator') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-200 hover:bg-slate-700/50">
+                <i class="fas fa-calculator mr-2 text-amber-500"></i> Kredit kalkulyatori
+            </a>
+            <a href="{{ url_for('contact') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-200 hover:bg-slate-700/50">
+                <i class="fas fa-map-marker-alt mr-2 text-amber-500"></i> Manzil & Aloqa
+            </a>
+            <a href="{{ url_for('admin') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-400 hover:bg-slate-700/50">
+                <i class="fas fa-cog mr-2"></i> Admin boshqaruv
+            </a>
+            <div class="pt-3">
+                <a href="{{ url_for('add_listing') }}" class="w-full py-3 rounded-xl font-bold text-center block bg-amber-500 text-black">
+                    <i class="fas fa-plus-circle mr-1"></i> Mashina yoki moto sotish
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert-box alert-animated mb-4 p-4 rounded-xl flex items-center justify-between border 
+                        {% if category == 'success' %} bg-emerald-950/80 border-emerald-500/50 text-emerald-300 
+                        {% elif category == 'danger' %} bg-rose-950/80 border-rose-500/50 text-rose-300 
+                        {% else %} bg-amber-950/80 border-amber-500/50 text-amber-300 {% endif %}">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas {% if category == 'success' %}fa-check-circle{% elif category == 'danger' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} text-lg"></i>
+                            <span class="font-medium text-sm sm:text-base">{{ message }}</span>
+                        </div>
+                        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white ml-4">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-800 border-t border-slate-800/80 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+                <!-- Col 1: Brand Info -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-black font-black text-xl">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="brand-font text-2xl font-black text-white">XON</span>
+                            <span class="brand-font text-2xl font-black text-amber-500 ml-1">MOTO</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+                        O'zbekistondagi eng yirik zamonaviy avtomobil va mototsikllar bozori. Qimmatbaho hashamatli sportkarlar, hamyonbop tejamkor mashinalar va super mototsikllarni eng yaxshi narxlarda xarid qiling yoki soting.
+                    </p>
+                    <div class="flex items-center space-x-3 pt-2">
+                        <a href="https://t.me" class="w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:bg-dark-600 transition">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="https://instagram.com" class="w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:bg-dark-600 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://youtube.com" class="w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:bg-dark-600 transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="tel:+998907770000" class="w-9 h-9 rounded-lg bg-dark-700 flex items-center justify-center text-slate-300 hover:text-amber-400 hover:bg-dark-600 transition">
+                            <i class="fas fa-phone"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Toifalar -->
+                <div>
+                    <h3 class="text-white font-bold text-base mb-4 tracking-wide uppercase text-xs text-amber-400">Toifalar</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-400">
+                        <li>
+                            <a href="{{ url_for('catalog', category='luxury') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-amber-500"></i> Qimmatbaho mashinalar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('catalog', category='budget') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-emerald-500"></i> Hamyonbop mashinalar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('catalog', category='moto') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-indigo-500"></i> Mototsikllar & Skuterlar
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('catalog', sort_by='popular') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-slate-500"></i> Eng ko'p ko'rilganlar
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Foydali bo'limlar -->
+                <div>
+                    <h3 class="text-white font-bold text-base mb-4 tracking-wide uppercase text-xs text-amber-400">Foydali</h3>
+                    <ul class="space-y-2.5 text-sm text-slate-400">
+                        <li>
+                            <a href="{{ url_for('add_listing') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-amber-500"></i> E'lon joylashtirish
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('calculator') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-amber-500"></i> Kredit hisoblagich
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('contact') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-amber-500"></i> Avtosalon manzili
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('admin') }}" class="hover:text-amber-400 transition flex items-center">
+                                <i class="fas fa-chevron-right text-xs mr-2 text-amber-500"></i> Boshqaruv paneli
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Kontaktlar -->
+                <div>
+                    <h3 class="text-white font-bold text-base mb-4 tracking-wide uppercase text-xs text-amber-400">Biz bilan aloqa</h3>
+                    <div class="space-y-3 text-sm text-slate-400">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-amber-500 mt-1"></i>
+                            <span>Toshkent sh., Sergeli mashina bozori hududi, XON_MOTO paviloni</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-amber-500"></i>
+                            <a href="tel:+998907770000" class="hover:text-white font-semibold text-slate-200">+998 90 777 00 00</a>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-amber-500"></i>
+                            <span>Har kuni: 08:00 - 21:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 XON_MOTO. Barcha huquqlar himoyalangan.</p>
+                <p class="mt-2 md:mt-0 flex items-center space-x-4">
+                    <span>Qimmatbaho avtomobillar</span>
+                    <span>•</span>
+                    <span>Hamyonbop xalq mashinalari</span>
+                    <span>•</span>
+                    <span>Tezkor mototsikllar</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
