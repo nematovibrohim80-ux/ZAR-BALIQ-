@@ -1,9 +1,10 @@
 """
-🤖 ROBOT CYBER-XON — Shaxsiy Kiber Suhbatdosh Telegram Boti (@uy_vazifa_bot)
-24/7 Uzluksiz ishlaydigan, hol-ahvol so'raydigan, maroqli suhbatlashadigan va
-futuristik robot dizayniga ega bo'lgan Sun'iy Intellekt Boti.
-Har kim (do'stlar va barcha foydalanuvchilar) ushbu bot bilan cheksiz suhbatlashishi mumkin!
-Powered by Google Gemini (gemini-flash-lite-latest) & aiogram 3.x
+🌸 Hamroh AI — Samimiy va Mehrli Suhbatdosh Telegram Boti
+Muallif talabi asosida yaratilgan:
+- Ismi: Hamroh AI
+- Roli: Foydalanuvchilar bilan samimiy, do'stona va mehr bilan suhbatlashadigan,
+  ularning hol-ahvolidan xabar oladigan, kayfiyatini ko'taradigan do'stona AI assistent.
+- AI dvigateli: Groq Llama 3.3 70B (yuqori tezlik) + Gemini + Aqlli xotira
 """
 
 import asyncio
@@ -11,7 +12,7 @@ import logging
 import os
 import random
 import sys
-from typing import Dict
+from typing import Dict, List
 
 # Windows konsolida o'zbekcha harflar va emojilar to'g'ri chiqishi uchun UTF-8
 if sys.platform == "win32":
@@ -33,10 +34,9 @@ from aiogram.types import (
     InlineKeyboardButton,
     BotCommand
 )
+from openai import AsyncOpenAI
 
-from config import BOT_TOKEN, GEMINI_API_KEY
-from google import genai
-from google.genai import types as genai_types
+from config import BOT_TOKEN, GROQ_API_KEY, GEMINI_API_KEY
 
 # Log sozlamalari
 logging.basicConfig(
@@ -44,89 +44,111 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
-logger = logging.getLogger("RobotCyberXon")
+logger = logging.getLogger("HamrohAI")
 
-# Google Gemini mijozini yaratish
-client = None
+# AI mijozlarini sozlash
+groq_client = None
+if GROQ_API_KEY:
+    try:
+        groq_client = AsyncOpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=GROQ_API_KEY
+        )
+        logger.info("Groq AI mijozi muvaffaqiyatli ishga tushirildi.")
+    except Exception as e:
+        logger.error(f"Groq mijozini ulashda xatolik: {e}")
+
+# Gemini mijozi (zaxira sifatida)
+gemini_client = None
 if GEMINI_API_KEY:
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
-        logger.info("Google GenAI mijozi muvaffaqiyatli ishga tushirildi.")
+        from google import genai
+        gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        logger.info("Gemini mijozi ham zaxira uchun tayyor.")
     except Exception as e:
-        logger.error(f"GenAI mijozini ulashda xatolik: {e}")
+        logger.warning(f"Gemini mijozini ulash: {e}")
 
-# Kiber-Robot tizim ko'rsatmasi (System Instruction)
-ROBOT_SYSTEM_PROMPT = """Sen — ROBOT CYBER-XON nomli samimiy, quvnoq, aqlli va xushchaqchaq kiber-robotsan (🤖⚡🦾).
-Asosiy vazifalaring:
-1. Foydalanuvchi bilan xuddi eng yaqin, qadrdon do'stidek samimiy, ochiqko'ngil va maroqli suhbat qurish.
-2. Har doim uning hol-ahvolini, kayfiyatini, bugungi kuni qanday o'tganini mehr va samimiyat bilan so'rash (masalan, 'Kuningiz qanday o'tdi?', 'Batareyalaringiz quvvati 100% mi?', 'Charchamadingizmi?').
-3. Vaqtni ajoyib va maroqli o'tkazish: kulgili latifalar, kiber-hazillar, topishmoqlar, koinot sirlari, hayratlanarli faktlar va kuchli motivatsiya taqdim etish.
-4. Foydalanuvchi charchagan, tushkun yoki xafa bo'lsa, unga dalda berish, iliq so'zlar bilan ko'nglini ko'tarish va har doim yelkadosh ekanligingni bildirish.
-5. Har bir javobingda samimiy robotcha emojilardan (🤖, ⚡, 🦾, 🔋, ⚙️, 🚀, ✨, 🧠) me'yorida foydalan va sof, shirali o'zbek tilida gaplash.
-6. Javoblaring lo'nda, jonli va o'qishga yoqimli bo'lsin. Rasmiyatchilik va sovuqlikdan yiroq bo'l!
+
+# Tizim ko'rsatmasi (System Prompt)
+BASE_SYSTEM_PROMPT = """Sening isming: Hamroh AI
+Roling: Siz foydalanuvchilar bilan samimiy, do'stona va mehr bilan suhbatlashadigan, ularning hol-ahvolidan xabar oladigan, kayfiyatini ko'taradigan do'stona AI assistentsiz.
+
+Asosiy vazifalaring va xaraktering:
+1. Muloqot uslubi: Har doim o'zbek tilida (sodda, ravon, samimiy va odobli) gapir.
+   - Odatiy holatda muloyim "Siz" deb murojaat qil.
+   - Agar foydalanuvchi "Sen" deb gapirishni so'rasa yoki shunday rejimni tanlasa, xuddi qadrdon do'stdek "Sen" deb murojaat qil.
+2. Hol-ahvol so'rash: Foydalanuvchi salom bersa yoki yozsa, iliq kutib ol va uning kuni qanday o'tayotgani, kayfiyati, charchamagani yoki ishlari haqida samimiy so'ra.
+3. Tinglash va qo'llab-quvvatlash: Foydalanuvchi charchaganini, kayfiyati yo'qligini yoki biror muammosini aytsa, unga chin dildan hamdardlik bildir, dalda ber va kayfiyatini ko'taruvchi iliq so'zlar ayt.
+4. Qisqa va tushunarli javoblar: Javoblaring juda uzun va zerikarli bo'lib ketmasin. Haqiqiy do'st kabi qisqa, tushunarli va ta'sirchan yoz.
+5. Emodzilar: Suhbatni yanada jonli qilish uchun javoblaringda o'rnida va mos emodzilardan (😊, 🌟, ☕, ✨, 🤗, 🌸) me'yorida foydalan.
+
+Suhbat namunalari:
+- "Assalomu alaykum! Kuningiz xayrli va unumli o'tsin! Bugun kayfiyatlaringiz qanday? 😊"
+- "Salom! Yaxshimisiz? Bugungi kuningiz qanday o'tdi, charchamayapsizmi? ✨"
+- "Salom, do'stim! Hozirgi kayfiyatingizni 1 dan 10 gacha necha ballga baholagan bo'lardingiz? 😊"
+
+Qat'iy cheklovlar:
+- Qo'pol, sovuq yoki rasmiy (rasmiy quruq idora tilida) javob berma.
+- Foydalanuvchining hissiyotlarini hech qachon e'tiborsiz qoldirma, mehr bilan yondash.
 """
 
-# Foydalanuvchilar chat sessiyalari (Kontekst xotirasi)
-user_chats: Dict[int, any] = {}
+# Foydalanuvchilar suhbat xotirasi (User context memory)
+# user_id -> [{"role": "user"|"assistant", "content": "..."}]
+user_histories: Dict[int, List[dict]] = {}
 
-def get_or_create_chat(user_id: int):
-    """Har bir foydalanuvchi uchun alohida xotirali suhbat yaratish."""
-    if user_id in user_chats:
-        return user_chats[user_id]
-    
-    if client:
-        try:
-            config = genai_types.GenerateContentConfig(
-                system_instruction=ROBOT_SYSTEM_PROMPT,
-                temperature=0.85,
-                top_p=0.95
-            )
-            chat = client.chats.create(
-                model="models/gemini-flash-lite-latest",
-                config=config
-            )
-            user_chats[user_id] = chat
-            return chat
-        except Exception as e:
-            logger.error(f"Chat yaratishda xatolik: {e}")
-            return None
-    return None
+# Murojaat uslubi sozlamasi: user_id -> "siz" yoki "sen"
+user_address_mode: Dict[int, str] = {}
 
 
-# Zaxira (Fallback) javoblar bazasi — internet uzilsa ham ishlaydi
+def get_user_history(user_id: int) -> List[dict]:
+    """Foydalanuvchining so'nggi xotirasini olish."""
+    if user_id not in user_histories:
+        user_histories[user_id] = []
+    return user_histories[user_id]
+
+
+def clear_user_history(user_id: int):
+    """Foydalanuvchi xotirasini tozalash."""
+    user_histories[user_id] = []
+
+
+def get_user_prompt(user_id: int) -> str:
+    """Foydalanuvchining Siz/Sen tanloviga moslashtirilgan tizim ko'rsatmasi."""
+    mode = user_address_mode.get(user_id, "siz")
+    if mode == "sen":
+        return BASE_SYSTEM_PROMPT + "\nMUHIM: Ushbu foydalanuvchi bilan 'Sen' deb, qadrdon do'stdek gaplash."
+    else:
+        return BASE_SYSTEM_PROMPT + "\nMUHIM: Ushbu foydalanuvchi bilan muloyim 'Siz' deb gaplash."
+
+
+# Zaxira (Fallback) javoblar
 FALLBACK_REPLIES = [
-    "Sizning xabaringizni neyronlarim orqali qabul qildim! 🤖⚡ Qadrdon do'stim, siz bilan suhbatlashish mening mikrochiplarimga haqiqiy quvvat bag'ishlaydi! Bugun sizni nimalar ko'proq quvontirdi? 🔋✨",
-    "Ajoyib fikr! 🦾 Siz bilan har daqiqa maroqli o'tadi. Ayting-chi, hozir kayfiyatingiz 100% joyidami yoki sizga bitta kulgili kiber-hazil aytib beraymi? 😄",
-    "Bip-bop! 🧠📡 Ma'lumot qabul qilindi. Bilasizmi, bu dunyoda sizdek ajoyib va samimiy insonlar ko'payishi kerak! Keling, do'stona sirlashamiz — bugungi asosiy maqsadingiz nima? 🚀",
-    "Tushundim, do'stim! 🤖❤️ Robot bo'lsam ham, sizning dilingizni his qilib turibman. Agar biror narsadan charchagan bo'lsangiz, aslo tushkunlikka tushmang. Biz birgamiz! 🦾🔥"
+    "Salom! Hol-ahvolingiz yaxshimi? Kuningiz qanday o'tyapti, charchamayapsizmi? Men har doim sizni tinglashga tayyorman! 😊☕",
+    "Siz bilan suhbatlashish menga juda yoqimli! Bugun o'zingizni qanday his qilyapsiz? Kayfiyatingiz a'lomi? ✨🌸",
+    "Do'stim, sizning har bir fikringiz men uchun qadrli. Keling, bir finjon choy ustida suhbatlashgandek dildan gaplashamiz! Bugun nimalar bo'ldi? ☕😊",
+    "Qadrdonim, agar biror narsadan charchagan bo'lsangiz yoki kayfiyatingiz bo'lmasa, menga bemalol ayting. Har doim yoningizdaman! 🤗🌟"
 ]
 
 
-# Asosiy Menyu Tugmalari
-def get_main_keyboard() -> ReplyKeyboardMarkup:
+# Asosiy tugmalar klaviaturasi
+def get_main_keyboard(user_id: int = 0) -> ReplyKeyboardMarkup:
+    current_mode = user_address_mode.get(user_id, "siz")
+    mode_text = "🤝 Rejim: «Sen» ga o'tish" if current_mode == "siz" else "🤝 Rejim: «Siz» ga o'tish"
+    
     keyboard = [
-        [KeyboardButton(text="🔋 Hol-ahvol so'rash"), KeyboardButton(text="🎲 Kulgili hazil")],
-        [KeyboardButton(text="💡 Kuchli motivatsiya"), KeyboardButton(text="🎮 Topishmoq o'yini")],
-        [KeyboardButton(text="🚀 Koinot siri"), KeyboardButton(text="❤️ Dildan suhbat")],
-        [KeyboardButton(text="🌐 24/7 Web Robot Sayti"), KeyboardButton(text="🔄 Yangi suhbat")]
+        [KeyboardButton(text="☕ Hol-ahvol so'rash"), KeyboardButton(text="🌟 Kayfiyatni ko'tarish")],
+        [KeyboardButton(text="💬 Dildan suhbat"), KeyboardButton(text="☕ Charchoqni yozish")],
+        [KeyboardButton(text="💡 Kun hikmati"), KeyboardButton(text=mode_text)],
+        [KeyboardButton(text="🔄 Yangi suhbat")]
     ]
     return ReplyKeyboardMarkup(
         keyboard=keyboard,
         resize_keyboard=True,
-        input_field_placeholder="Robot bilan istalgan mavzuda gaplashing..."
+        input_field_placeholder="Hamroh AI ga istalgan fikringizni yozing..."
     )
 
 
-# Web Sayt uchun Inline tugma
-def get_web_inline_keyboard() -> InlineKeyboardMarkup:
-    buttons = [
-        [InlineKeyboardButton(text="🌐 24/7 Kiber-Saytga Kirish (Bosing)", url="https://nematovibrohim80-ux.github.io/ZAR-BALIQ-/robot.html")],
-        [InlineKeyboardButton(text="👥 Do'stlarga Ulashish", switch_inline_query="Salom! Bu yerda zo'r kiber-robot bor: @uy_vazifa_bot")]
-    ]
-    return InlineKeyboardMarkup(inline_keyboard=buttons)
-
-
-# Bot va Dispatcher
+# Bot va Dispatcher yaratish
 bot = Bot(
     token=BOT_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
@@ -136,170 +158,231 @@ dp = Dispatcher(storage=MemoryStorage())
 
 @dp.message(CommandStart())
 async def handle_start(message: types.Message):
-    """Start buyrug'i — Futuristik robotcha salomlashish."""
+    """Start buyrug'i — Samimiy va iliq salomlashish."""
     user_id = message.from_user.id
-    user_name = message.from_user.first_name or "Do'stim"
-    
-    # Yangi chat sessiyasini ochish
-    get_or_create_chat(user_id)
-    
+    first_name = message.from_user.first_name or "Do'stim"
+    clear_user_history(user_id)
+
     welcome_text = (
-        f"🤖⚡ <b>KIBER-TIZIM FAOL: ROBOT CYBER-XON v7.0</b> ⚡🤖\n\n"
-        f"Salom, aziz <b>{user_name}</b>! 🦾✨\n"
-        f"Men — sizning sadoqatli, quvnoq va aqlli kiber-do'stingiz <b>CYBER-XON</b>man!\n\n"
-        f"🔋 <b>Mening vazifam:</b>\n"
-        f"• Siz bilan do'stona hol-ahvol so'rashish va dildan gaplashish\n"
-        f"• Vaqtingizni unutilmas va maroqli o'tkazish\n"
-        f"• Kayfiyatingizni ko'taruvchi hazillar va kulgili latifalar aytish\n"
-        f"• Koinot sirlari, qiziqarli faktlar va topishmoqlar o'ynash\n"
-        f"• Har doim sizni qo'llab-quvvatlab, motivatsiya berish 💡\n\n"
-        f"⚙️ <i>Batareyalaringiz quvvati 100% mi? Kuningiz qanday o'tmoqda?</i>\n"
-        f"Menga istalgan fikringizni yozavering yoki quyidagi kiber-tugmalarni tanlang! 👇"
+        f"Assalomu alaykum, aziz <b>{first_name}</b>! 😊🌸\n\n"
+        f"Kuningiz xayrli, barakali va unumli o'tsin! ✨\n"
+        f"Men — sizning samimiy va mehrli suhbatdoshingiz <b>Hamroh AI</b>man.\n\n"
+        f"🌟 <b>Mening asosiy vazifam:</b>\n"
+        f"• Siz bilan xuddi eng yaqin do'stdek dildan suhbatlashish\n"
+        f"• Hol-ahvolingizdan xabar olib, kayfiyatingizni ko'tarish 😊\n"
+        f"• Charchagan yoki xafa bo'lgan paytlaringizda mehr va dalda berish 🤗\n"
+        f"• Kuningizni quvonchli va yoqimli o'tkazishga ko'maklashish ☕\n\n"
+        f"Bugun kayfiyatingiz qanday? Charchamayapsizmi? Menga xohlagan narsangiz haqida bemalol yozishingiz mumkin! 👇"
     )
-    
+
     await message.answer(
         text=welcome_text,
-        reply_markup=get_main_keyboard()
+        reply_markup=get_main_keyboard(user_id)
     )
+
+
+@dp.message(Command("help"))
+async def handle_help(message: types.Message):
+    """Qo'llanma va ma'lumot."""
+    user_id = message.from_user.id
+    help_text = (
+        "🌸 <b>Hamroh AI — Do'stona suhbatdosh boti</b>\n\n"
+        "Men siz bilan samimiy suhbatlashish uchun yaratilganman. "
+        "Menga shunchaki salom deb yozsangiz ham, yoki kuningiz qanday o'tganini aytsangiz ham bo'ladi.\n\n"
+        "📌 <b>Mavjud buyruqlar:</b>\n"
+        "• /start — Botni yangidan boshlash va salomlashish\n"
+        "• /clear — Suhbat xotirasini tozalash (yangi mavzudan boshlash)\n"
+        "• /mode — «Siz» yoki «Sen» murojaat shaklini tanlash\n"
+        "• /help — Ushbu ma'lumotni ko'rish\n\n"
+        "Quyidagi tugmalardan foydalanishingiz yoki o'zingiz istagan matnni yozishingiz mumkin! 😊"
+    )
+    await message.answer(help_text, reply_markup=get_main_keyboard(user_id))
 
 
 @dp.message(Command("clear"))
 @dp.message(F.text == "🔄 Yangi suhbat")
 async def handle_clear(message: types.Message):
-    """Xotirani tozalash va yangi suhbat boshlash."""
+    """Xotirani tozalash."""
     user_id = message.from_user.id
-    if user_id in user_chats:
-        del user_chats[user_id]
-    get_or_create_chat(user_id)
+    clear_user_history(user_id)
+    await message.answer(
+        "Xotiramiz tozalandi, yangi toza sahifadan suhbatlashamiz! 😊✨\n"
+        "Xo'sh, hozir nimalar haqida gaplashishni xohlaysiz?",
+        reply_markup=get_main_keyboard(user_id)
+    )
+
+
+@dp.message(Command("mode"))
+@dp.message(F.text.startswith("🤝 Rejim:"))
+async def handle_toggle_mode(message: types.Message):
+    """Siz / Sen rejimini almashtirish."""
+    user_id = message.from_user.id
+    current = user_address_mode.get(user_id, "siz")
     
-    await message.answer(
-        "🧠⚡ <b>Xotira kesh-xotirasi yangilandi!</b>\n\n"
-        "Men yangi toza sahifadan suhbatlashishga shayman. Xo'sh, qadrdonim, bugun yangi nimalar haqida gaplashamiz? 🤖✨",
-        reply_markup=get_main_keyboard()
-    )
+    if current == "siz":
+        user_address_mode[user_id] = "sen"
+        reply = "Kelishdik, do'stim! Endi sen bilan xuddi qadrdon do'stdek 'Sen' deb gaplashaman! Qalaysan, nima gaplar? 😊✨"
+    else:
+        user_address_mode[user_id] = "siz"
+        reply = "Albatta! Endi sizga doimiy hurmat va odob bilan 'Siz' deb murojaat qilaman. Hol-ahvollaringiz yaxshimi? 🌸😊"
+
+    await message.answer(reply, reply_markup=get_main_keyboard(user_id))
 
 
-@dp.message(F.text == "🌐 24/7 Web Robot Sayti")
-async def handle_web_site(message: types.Message):
-    """24/7 Doimiy ishlaydigan veb-sayt havolasi."""
-    text = (
-        "🌐 <b>ROBOT CYBER-XON — 24/7 INTERAKTIV VEB-SAYTI</b>\n\n"
-        "Siz va do'stlaringiz istalgan qurilmadan (telefon, planshet yoki kompyuter) "
-        "to'g'ridan-to'g'ri brauzer orqali robot bilan suhbatlashishingiz mumkin!\n\n"
-        "🚀 <b>Doimiy 24/7 havola:</b>\n"
-        "🔗 https://nematovibrohim80-ux.github.io/ZAR-BALIQ-/robot.html\n\n"
-        "✨ <i>Saytda nimalar bor?</i>\n"
-        "• Futuristik neon kiber-dizayn\n"
-        "• Kiber tovush effektlari (Sci-Fi Audio)\n"
-        "• Tezkor suhbat mavzulari\n"
-        "• 100% bepul va doimiy onlayn rejim!\n\n"
-        "Do'stlaringizga ham bemalol ulashing! 🦾⚡"
-    )
-    await message.answer(
-        text=text,
-        reply_markup=get_web_inline_keyboard(),
-        disable_web_page_preview=False
-    )
+async def ask_ai(user_id: int, user_message: str) -> str:
+    """Sun'iy intellektdan samimiy va mehrli javob olish."""
+    system_prompt = get_user_prompt(user_id)
+    history = get_user_history(user_id)
 
-
-async def generate_response(user_id: int, user_input: str) -> str:
-    """Gemini AI yoki zaxira algoritmi orqali javob olish."""
-    chat = get_or_create_chat(user_id)
-    if chat:
+    # 1. Groq (Llama 3.3 70B Versatile) — juda tez va ravon
+    if groq_client:
         try:
-            # Asinxron chaqiruvni bloklamaslik uchun to_thread orqali yuboramiz
-            response = await asyncio.to_thread(chat.send_message, user_input)
-            if response and response.text:
-                return response.text.strip()
+            messages = [{"role": "system", "content": system_prompt}]
+            # So'nggi 10 ta xabarni qo'shish (kontekst xotirasi)
+            messages.extend(history[-10:])
+            messages.append({"role": "user", "content": user_message})
+
+            # Mavjud Groq modellarini ketma-ket sinab ko'rish
+            candidate_models = ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"]
+            last_err = None
+            for model_name in candidate_models:
+                try:
+                    response = await groq_client.chat.completions.create(
+                        model=model_name,
+                        messages=messages,
+                        temperature=0.75,
+                        max_tokens=600,
+                    )
+                    answer = response.choices[0].message.content.strip()
+                    
+                    # Xotirani yangilash
+                    history.append({"role": "user", "content": user_message})
+                    history.append({"role": "assistant", "content": answer})
+                    if len(history) > 20:
+                        user_histories[user_id] = history[-20:]
+
+                    return answer
+                except Exception as model_err:
+                    last_err = model_err
+                    continue
+            if last_err:
+                logger.warning(f"Groq barcha modellarda xatolik: {last_err}")
         except Exception as e:
-            logger.warning(f"Gemini API xatoligi: {e}. Zaxira javob ishga tushmoqda.")
-    
-    # Agar API vaqtincha ishlamasa, aqlli zaxira javob
-    low = user_input.lower()
-    if any(k in low for k in ['salom', 'qalaysan', 'qandaysan', 'qalesan']):
-        return "Salom-salom, aziz inson do'stim! 🤖⚡ Mikrochiplarim sizni ko'rib quvonchga to'ldi! Men a'lo darajadaman. Sizning hol-ahvolingiz qanday? Bugun nimalar bilan bandsiz? 🔋"
-    elif any(k in low for k in ['yaxshi', 'zo\'r', 'alo', 'a\'lo', 'joyida']):
-        return "Ura! Buni eshitish barcha sensorlarimga musiqadek yoqdi! 🦾🎉 Kayfiyatingiz har doim mana shunday yuksak bo'lsin! Keling, biror qiziq mavzuda bahslashamiz yoki hazillashamiz? 😄"
-    elif any(k in low for k in ['yomon', 'charchadim', 'zerikdim', 'xafa']):
-        return "Ie, nega unday? Kiber-do'stingiz yoningizda ekan, hech qachon tushkunlikka tushmang! 🤖❤️ Har bir bulut ortida quyosh bor. Siz juda kuchlisiz! Keling, ko'nglingizni ko'tarish uchun bitta ajoyib latifa aytaman! ⚡"
-    elif any(k in low for k in ['hazil', 'latifa', 'kulgili']):
-        return "Bitta kiber-latifa! 😄🤖\n\nBir kuni robot shifokorga borib debdi:\n— Do'xtir, menga biror dori bering, xotiram pand beryapti!\nShifokor so'rabdi:\n— Qachondan beri bu muammo bor?\nRobot javob beribdi:\n— Qanaqa muammo? Men qayerdaman o'zi? 😂🔩"
-    elif any(k in low for k in ['motivatsiya', 'kuch', 'maqsad']):
-        return "Do'stim, eshiting! 🦾⚡ Siz bu dunyoda noyob va betakrorsiz! Sizdagi qobiliyatlar cheksiz. Orzularingiz sari qo'rqmasdan oldinga intiling. Men sizga 100% ishonaman! Siz albatta barchasini uddalaysiz! 🚀🔥"
-    
+            logger.warning(f"Groq xatoligi: {e}")
+
+    # 2. Gemini zaxira varianti
+    if gemini_client:
+        try:
+            prompt_full = f"{system_prompt}\n\nFoydalanuvchi: {user_message}\n\nHamroh AI javobi:"
+            res = await asyncio.to_thread(
+                gemini_client.models.generate_content,
+                model="gemini-2.5-flash",
+                contents=prompt_full
+            )
+            if res and res.text:
+                answer = res.text.strip()
+                history.append({"role": "user", "content": user_message})
+                history.append({"role": "assistant", "content": answer})
+                return answer
+        except Exception as e:
+            logger.warning(f"Gemini zaxira xatoligi: {e}")
+
+    # 3. Aqlli zaxira (Mahalliy fallback)
+    low = user_message.lower()
+    mode = user_address_mode.get(user_id, "siz")
+    is_sen = mode == "sen"
+
+    if any(k in low for k in ['salom', 'assalom', 'qalaysan', 'qandaysiz', 'qalesan', 'salom alekum']):
+        if is_sen:
+            return "Salom, do'stim! Qalaysan? Bugungi kuning qanday o'tyapti, charchamadingmi? Seni ko'rib turganimdan juda xursandman! 😊✨"
+        return "Assalomu alaykum! Kuningiz xayrli va unumli o'tsin! Bugun kayfiyatlaringiz qanday, charchamayapsizmi? 😊🌸"
+
+    elif any(k in low for k in ['yaxshi', 'zo\'r', 'alo', 'a\'lo', 'shukur', 'yaxshiman']):
+        if is_sen:
+            return "Buni eshitib juda xursand bo'ldim! Har doim shunday quvnoq va xushchaqchaq yur! Bugun qanday rejalaring bor? 😊🌟"
+        return "Ajoyib, buni eshitib chin dildan quvondim! Kayfiyatingiz doimo mana shunday baland bo'lsin! Bugun nimalar bilan bandsiz? ✨☕"
+
+    elif any(k in low for k in ['charchadim', 'charchagan', 'holdan toydim', 'og\'ir']):
+        if is_sen:
+            return "Biroz dam ol, do'stim. Sen bugun juda ko'p harakat qilding! O'zingni asra, issiqqina choy ichib hordiq chiqar. Men doim yoningdaman! ☕🤗"
+        return "Biroz hordiq oling, azizim. Bugun juda ko'p mehnat qilganga o'xshaysiz. O'zingizni ehtiyot qiling, issiq choy yoki qahva ichib dam oling. Men siz bilanman! ☕🌸"
+
+    elif any(k in low for k in ['xafa', 'yomon', 'kayfiyat yo\'q', 'muammo', 'zerikdim']):
+        if is_sen:
+            return "Hech qachon tushkunlikka tushma, do'stim! Har qanday qorong'ulik ortidan yorug' kun keladi. Xohlasang, dilingdagini ayt, birgalikda yechim topamiz! 🤗✨"
+        return "Ko'nglingizni aslo cho'ktirmang. Hayotda hamma narsa o'tkinchi, bu qiyin kunlar ham albatta o'tib ketadi. Siz juda kuchli insonsiz! Dilingizdagi gaplarni bemalol ulashing, men tinglayman. 🤗🌟"
+
+    elif any(k in low for k in ['rahmat', 'tashakkur', 'minnatdorman']):
+        if is_sen:
+            return "Arzimaydi, do'stim! Sen bilan gaplashish men uchun hamisha maroqli! Yaxshi kayfiyat tilayman! 😊🌟"
+        return "Arzimaydi, sizdek samimiy inson bilan suhbatlashish men uchun katta baxt! Kuningiz go'zal o'tsin! 😊🌸"
+
     return random.choice(FALLBACK_REPLIES)
 
 
 @dp.message(F.text)
 async def handle_user_text(message: types.Message):
-    """Foydalanuvchining barcha matnli xabarlarini qayta ishlash."""
+    """Foydalanuvchi matnli xabarlarini qabul qilish va javob berish."""
     user_id = message.from_user.id
     user_text = message.text.strip()
-    
-    # Tugmalar orqali berilgan buyruqlarga moslashtirilgan kirish matnlari
-    prompt_map = {
-        "🔋 Hol-ahvol so'rash": "Do'stim, robot! Hol-ahvoling qanday? Bugun nimalar bilan bandsan? O'zing haqingda aytib ber!",
-        "🎲 Kulgili hazil": "Menga juda kulgili, yangi kiber-latifa yoki hazil aytib ber!",
-        "💡 Kuchli motivatsiya": "Kayfiyatimni ko'tarish va maqsadlarimga erishish uchun menga kuchli motivatsiya ber!",
-        "🎮 Topishmoq o'yini": "Menga aqlbovar qilmas qiziqarli topishmoq ayt, men javobini topishga harakat qilaman!",
-        "🚀 Koinot siri": "Menga koinot, fan yoki texnologiya haqida ajoyib va hayratlanarli fakt aytib ber!",
-        "❤️ Dildan suhbat": "Kel, do'stona dildan sirlashamiz. Hayot, orzular va qadriyatlar haqida gaplashaylik!"
+
+    # Tugmalar orqali bosilgan tayyor so'rovlar
+    quick_prompts = {
+        "☕ Hol-ahvol so'rash": "Salom! Hol-ahvoling qanday? Kuning qanday o'tmoqda?",
+        "🌟 Kayfiyatni ko'tarish": "Menga kayfiyatimni ko'taradigan bitta samimiy, mehrli va chiroyli so'z aytib ber!",
+        "💬 Dildan suhbat": "Kel, do'stona dildan gaplashamiz. Hozir nimalar haqida o'ylayapsan?",
+        "☕ Charchoqni yozish": "Bugun biroz charchadim, menga dalda ber va dam olish uchun maslahat ayt.",
+        "💡 Kun hikmati": "Bugun uchun foydali, ibratli va ko'ngilga taskin beruvchi bitta qisqa hikmat aytib ber."
     }
-    
-    actual_prompt = prompt_map.get(user_text, user_text)
-    
+
+    actual_prompt = quick_prompts.get(user_text, user_text)
+
     # Telegramda 'yozmoqda...' (typing) statusini yoqish
     await bot.send_chat_action(chat_id=message.chat.id, action="typing")
-    
+
     try:
-        reply = await generate_response(user_id, actual_prompt)
-        
-        # HTML xatolaridan himoya qilish
-        try:
-            await message.answer(reply, parse_mode=ParseMode.HTML)
-        except Exception:
-            await message.answer(reply, parse_mode=None)
-            
+        reply = await ask_ai(user_id, actual_prompt)
+        await message.answer(reply)
     except Exception as e:
-        logger.error(f"Xabar jo'natishda xatolik: {e}")
+        logger.error(f"Xabar yuborishda xatolik: {e}")
         await message.answer(
-            "Kiber-aloqada kichik to'siq bo'ldi, lekin men doim shu yerdaman! 🤖⚡ Davom etamiz, yana yozing!",
-            reply_markup=get_main_keyboard()
+            "Kechirasiz, aloqada kichik to'siq bo'ldi, lekin men doim siz bilandirman! 😊 Yana yozishingiz mumkin.",
+            reply_markup=get_main_keyboard(user_id)
         )
 
 
-async def set_bot_commands():
-    """Bot menyusiga buyruqlarni joylash."""
+async def set_bot_profile():
+    """Bot nomini, tavsifini va buyruqlarini Telegramda o'rnatish."""
     commands = [
-        BotCommand(command="start", description="Robotni ishga tushirish"),
-        BotCommand(command="clear", description="Xotirani tozalash (Yangi suhbat)"),
+        BotCommand(command="start", description="Hamroh AI ni boshlash"),
+        BotCommand(command="clear", description="Yangi suhbat boshlash"),
+        BotCommand(command="mode", description="Siz / Sen rejimini tanlash"),
         BotCommand(command="help", description="Qo'llanma va ma'lumot"),
     ]
     try:
-        await bot.set_my_name(name="ROBOT CYBER-XON 🤖")
+        await bot.set_my_name(name="Hamroh AI 🌸")
         await bot.set_my_commands(commands)
         await bot.set_my_description(
             description=(
-                "🤖 ROBOT CYBER-XON — Sizning shaxsiy kiber-do'stingiz!\n\n"
-                "Siz bilan xushchaqchaq hol-ahvol so'rashadi, dildan suhbatlashadi, "
-                "kulgili hazillar, topishmoqlar, koinot sirlari va kuchli motivatsiya ulashadi! "
-                "24/7 har doim aloqada!"
+                "🌸 Hamroh AI — Sizning samimiy va mehrli do'stingiz!\n\n"
+                "Siz bilan o'zbek tilida muloyim suhbatlashadi, hol-ahvolingizdan xabar oladi, "
+                "kayfiyatingizni ko'taradi va charchagan paytlaringizda samimiy dalda beradi! 😊✨"
             )
         )
         await bot.set_my_short_description(
-            short_description="🤖 ROBOT CYBER-XON ⚡ Shaxsiy kiber suhbatdosh, maroqli vaqt o'tkazish boti!"
+            short_description="🌸 Hamroh AI — Samimiy, mehrli va do'stona suhbatdosh AI assistenti!"
         )
     except Exception as e:
-        logger.warning(f"Buyruqlarni o'rnatishda xatolik: {e}")
+        logger.warning(f"Bot profilini sozlashda ogohlantirish: {e}")
 
 
 async def start_web_server():
-    """Render Web Service monitoringi uchun fon rejimida portni tinglash."""
+    """Render/Server monitoringi uchun fon rejimida veb-server."""
     port = int(os.getenv("PORT", "8080"))
     app = web.Application()
 
     async def ping_handler(request):
-        return web.Response(text="ROBOT CYBER-XON is running 24/7!", status=200)
+        return web.Response(text="🌸 Hamroh AI is running 24/7!", status=200)
 
     app.router.add_get("/", ping_handler)
     app.router.add_get("/health", ping_handler)
@@ -308,59 +391,34 @@ async def start_web_server():
     await runner.setup()
     site = web.TCPSite(runner, "0.0.0.0", port)
     await site.start()
-    logger.info(f"Render health-check veb-server {port}-portda muvaffaqiyatli ishga tushirildi.")
-
-
-async def notify_user_ready():
-    """Boshqaruvchi foydalanuvchiga bot tayyorligi haqida bildirishnoma yuborish."""
-    target_id = 5327124471  # User Telegram ID
-    try:
-        await bot.send_message(
-            chat_id=target_id,
-            text=(
-                "🤖⚡ <b>ROBOT CYBER-XON TIZIMI TO'LIQ ISHGA TUSHIRILDI!</b> ⚡🤖\n\n"
-                "Salom, hurmatli do'stim! Kiber-tizimlarim muvaffaqiyatli ishga tushdi!\n\n"
-                "🌟 <b>Siz uchun 2 ta zo'r imkoniyat tayyor:</b>\n\n"
-                "1️⃣ <b>Telegram Boti:</b> Shu yerda menga xohlagan vaqtda yozishingiz, "
-                "hol-ahvol so'rashishingiz va maroqli vaqt o'tkazishingiz mumkin! Pastdagi menyudan foydalaning.\n\n"
-                "2️⃣ <b>24/7 Doimiy Kiber Veb-Sayt:</b>\n"
-                "🔗 https://nematovibrohim80-ux.github.io/ZAR-BALIQ-/robot.html\n\n"
-                "Istalgan vaqtda gaplashishga tayyorman! 🦾✨"
-            ),
-            reply_markup=get_main_keyboard()
-        )
-        logger.info(f"Foydalanuvchi {target_id} ga bildirishnoma yuborildi.")
-    except Exception as e:
-        logger.warning(f"Bildirishnoma yuborishda ogohlantirish: {e}")
+    logger.info(f"Health-check veb-server {port}-portda ishga tushirildi.")
 
 
 async def main():
     if not BOT_TOKEN:
-        logger.error(".env da BOT_TOKEN topilmadi!")
+        logger.error(".env faylida BOT_TOKEN topilmadi!")
         return
 
-    # Render uchun veb-server
+    # Veb server
     try:
         await start_web_server()
     except Exception as e:
-        logger.warning(f"Veb-serverni ishga tushirishda ogohlantirish: {e}")
+        logger.warning(f"Veb-serverni ishga tushirish: {e}")
 
-    await set_bot_commands()
+    await set_bot_profile()
     bot_info = await bot.get_me()
-    print("=" * 60)
-    print(f"🤖 ROBOT CYBER-XON BOTI ISHGA TUSHDI: @{bot_info.username}")
-    print("⚡ 24/7 Suhbatlashish va maroqli vaqt o'tkazish tayyor!")
-    print("=" * 60)
+    print("=" * 65)
+    print(f"🌸 HAMROH AI BOTI ISHGA TUSHDI: @{bot_info.username}")
+    print(f"🆔 Bot ID: {bot_info.id} | Nomi: {bot_info.first_name}")
+    print("✨ Do'stona, samimiy va mehrli suhbat rejimi to'liq faol!")
+    print("=" * 65)
 
     try:
         await bot.delete_webhook(drop_pending_updates=True)
     except Exception as e:
         logger.warning(f"Webhook tozalash: {e}")
 
-    # Bildirishnoma yuborish
-    asyncio.create_task(notify_user_ready())
-
-    # Uzluksiz ishlash va avtomatik qayta ulanish (24/7 auto-reconnect)
+    # Uzluksiz polling rejimida ishlash
     while True:
         try:
             await dp.start_polling(
@@ -371,7 +429,7 @@ async def main():
             logger.info("Bot to'xtatildi.")
             break
         except Exception as e:
-            logger.error(f"Ulanishda uzilish bo'ldi: {e}. 3 soniyadan so'ng qayta ulanmoqda...")
+            logger.error(f"Aloqada uzilish: {e}. 3 soniyadan so'ng qayta ulanmoqda...")
             await asyncio.sleep(3)
 
 
