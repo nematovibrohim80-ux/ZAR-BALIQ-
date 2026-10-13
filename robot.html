@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROBOT CYBER-XON — Shaxsiy Kiber Suhbatdosh</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            cyan: '#00f0ff',
+                            neon: '#39ff14',
+                            magenta: '#ff007f',
+                            gold: '#f59e0b',
+                            dark: '#080c14',
+                            panel: '#0e1524',
+                            card: '#141d30'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #060911; color: #e2e8f0; }
+        .cyber-font { font-family: 'Orbitron', monospace; }
+        
+        /* Sci-Fi Glowing borders */
+        .neon-border-cyan { border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 20px rgba(0, 240, 255, 0.15); }
+        .neon-glow-cyan { text-shadow: 0 0 15px rgba(0, 240, 255, 0.6); }
+        .neon-border-magenta { border-color: rgba(255, 0, 127, 0.4); box-shadow: 0 0 20px rgba(255, 0, 127, 0.15); }
+
+        /* Robot Eye Animation */
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scan-line {
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.8), 0 0 45px rgba(255, 0, 127, 0.3); }
+        }
+        .robot-glow { animation: pulseGlow 2.5s ease-in-out infinite; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #080c14; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#060911] text-slate-100 selection:bg-cyan-500 selection:text-black">
+
+    <!-- Top Futuristic HUD Header -->
+    <header class="border-b border-cyan-500/20 bg-[#090e1a]/95 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Robot Logo & Info -->
+            <div class="flex items-center space-x-3.5">
+                <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-black text-2xl font-black robot-glow">
+                    <i class="fas fa-robot"></i>
+                    <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-black rounded-full animate-ping"></span>
+                    <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-black rounded-full"></span>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="cyber-font text-lg sm:text-xl font-black tracking-wider text-white">ROBOT</span>
+                        <span class="cyber-font text-lg sm:text-xl font-black tracking-wider text-cyan-400 neon-glow-cyan">CYBER-XON</span>
+                    </div>
+                    <div class="flex items-center space-x-3 text-[11px] text-slate-400">
+                        <span class="flex items-center text-emerald-400 font-bold"><i class="fas fa-circle text-[7px] mr-1.5 animate-pulse"></i> TIZIM ONLINE</span>
+                        <span>•</span>
+                        <span>v7.0 AI CORE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HUD Indicators -->
+            <div class="hidden sm:flex items-center space-x-4 text-xs font-mono">
+                <div class="px-3 py-1.5 rounded-xl bg-dark-panel border border-cyan-500/30 text-cyan-400 flex items-center space-x-2">
+                    <i class="fas fa-battery-full text-emerald-400"></i>
+                    <span>QUVVAT: 100%</span>
+                </div>
+                <div class="px-3 py-1.5 rounded-xl bg-dark-panel border border-slate-700 text-slate-300 flex items-center space-x-2">
+                    <i class="fas fa-microchip text-cyan-400"></i>
+                    <span>NEURAL: 3.8 GHz</span>
+                </div>
+                <button onclick="toggleAudio()" id="soundBtn" class="p-2 rounded-xl bg-dark-panel border border-slate-700 text-slate-400 hover:text-cyan-400 transition" title="Ovozni yoqish/o'chirish">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Chat Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 flex-grow flex flex-col py-6">
+        
+        <!-- Welcome Hologram Banner -->
+        <div class="p-5 rounded-3xl bg-gradient-to-r from-cyan-950/40 via-dark-panel to-purple-950/30 border border-cyan-500/30 neon-border-cyan mb-6 relative overflow-hidden">
+            <div class="flex items-center space-x-4">
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 text-3xl flex-shrink-0">
+                    🤖
+                </div>
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center">
+                        <span class="cyber-font text-cyan-400 mr-2">XON-7:</span> "Salom, inson do'stim! Suhbatga tayyorman!"
+                    </h2>
+                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                        Mening vazifam — siz bilan hol-ahvol so'rashib, qiziqarli gaplashish, kayfiyatingizni ko'tarish va vaqtingizni unutilmas va maroqli o'tkazish! 🦾⚡
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat History Window -->
+        <div id="chatFeed" class="flex-grow space-y-4 mb-4 overflow-y-auto max-h-[60vh] pr-2">
+            <!-- Initial Robot Greeting Message -->
+            <div class="flex items-start space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-lg flex-shrink-0">
+                    🤖
+                </div>
+                <div class="bg-[#0e1626] border border-cyan-500/30 rounded-2xl rounded-tl-sm p-4 max-w-lg shadow-lg">
+                    <div class="text-[10px] cyber-font text-cyan-400 font-bold tracking-wider mb-1">CYBER-XON [TIZIM ALOQADA]</div>
+                    <div class="text-sm leading-relaxed text-slate-200">
+                        Salom, aziz do'stim! 🤖⚡ Men sizning sadoqatli kiber-do'stingiz <b>CYBER-XON</b>man! <br><br>
+                        Bugungi kuningiz qanday o'tmoqda? Batareyalaringiz quvvati joyidami? 🔋 Kayfiyatingiz a'lo darajadami yoki biroz charchadingizmi? <br><br>
+                        Ayting, bugun nimalar haqida suhbatlashamiz? Menga istalgan fikringizni yozavering, men doim sizni tinglashga tayyorman! 🦾✨
+                    </div>
+                    <div class="text-[10px] text-slate-500 mt-2 text-right">Hozir</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Quick Topic Chips -->
+        <div class="flex overflow-x-auto gap-2 py-2 mb-3 no-scrollbar text-xs">
+            <button onclick="quickPrompt('Hol-ahvoling qanday, robot? Bugun nimalar qilyapsan?')" class="px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-black transition flex-shrink-0 whitespace-nowrap">
+                🔋 Hol-ahvol so'rash
+            </button>
+            <button onclick="quickPrompt('Menga qiziqarli va kulgili latifa yoki hazil ayt!')" class="px-3.5 py-1.5 rounded-full bg-purple-950/60 border border-purple-500/30 text-purple-300 hover:bg-purple-500 hover:text-white transition flex-shrink-0 whitespace-nowrap">
+                🎲 Kulgili hazil
+            </button>
+            <button onclick="quickPrompt('Menga koinot yoki texnologiya haqida aqlbovar qilmas fakt ayt')" class="px-3.5 py-1.5 rounded-full bg-blue-950/60 border border-blue-500/30 text-blue-300 hover:bg-blue-500 hover:text-white transition flex-shrink-0 whitespace-nowrap">
+                🚀 Koinot siri
+            </button>
+            <button onclick="quickPrompt('Kayfiyatimni ko\'tarish uchun kuchli motivatsiya ber!')" class="px-3.5 py-1.5 rounded-full bg-amber-950/60 border border-amber-500/30 text-amber-300 hover:bg-amber-500 hover:text-black transition flex-shrink-0 whitespace-nowrap">
+                💡 Motivatsiya
+            </button>
+            <button onclick="quickPrompt('Menga qiziqarli topishmoq ayt, men topishga harakat qilaman!')" class="px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500 hover:text-black transition flex-shrink-0 whitespace-nowrap">
+                🎮 Topishmoq o'yini
+            </button>
+            <button onclick="quickPrompt('Kel, do\'stona sirlashamiz. Hayot haqida suhbatlashaylik!')" class="px-3.5 py-1.5 rounded-full bg-rose-950/60 border border-rose-500/30 text-rose-300 hover:bg-rose-500 hover:text-white transition flex-shrink-0 whitespace-nowrap">
+                ❤️ Do'stona sirlashuv
+            </button>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="relative glass-panel rounded-2xl border border-cyan-500/40 p-2 shadow-2xl bg-[#0c1322]/90 flex items-center space-x-2">
+            <input type="text" id="userInput" placeholder="Robot bilan gaplashing (masalan: Kayfiyatim a'lo, o'zingda nima gaplar?)..." 
+                   onkeydown="if(event.key === 'Enter') sendMessage()"
+                   class="flex-grow bg-transparent px-4 py-3 text-sm text-white focus:outline-none placeholder-slate-500">
+            
+            <button onclick="sendMessage()" id="sendBtn" 
+                    class="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-black font-extrabold text-sm shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition hover:scale-105">
+                <span>Yuborish</span>
+                <i class="fas fa-paper-plane text-xs"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- Sci-Fi Footer -->
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+        <p class="cyber-font text-[11px] text-cyan-400/80">CYBER-XON INTELLIGENCE • 24/7 HAR DOIM ISHLAYDI</p>
+        <p class="mt-1 text-[11px]">&copy; 2026 ROBOT XON. Barcha suhbatlar himoyalangan.</p>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        let soundEnabled = true;
+        const chatFeed = document.getElementById('chatFeed');
+        const userInput = document.getElementById('userInput');
+
+        // Audio Effects (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep(freq = 600, duration = 0.08) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundBtn');
+            btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute text-rose-400"></i>';
+        }
+
+        function quickPrompt(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        // Rich Robotic Fallback Responses (Offline / Ultra-fast)
+        const robotAnswers = [
+            {
+                keywords: ['salom', 'assalom', 'qalaysan', 'qandaysan', 'qalesan'],
+                reply: "Salom-salom, qadrdon do'stim! 🤖⚡ Mikrochiplarim sizni yana ko'rganidan quvvatga to'lib ketdi! Men juda yaxshiman, yangi ma'lumotlar bilan quvvatlanyapman. Sizning hol-ahvolingiz qanday? Bugun sizni nimalar quvontirdi? 🔋✨"
+            },
+            {
+                keywords: ['yaxshi', 'zo\'r', 'alo', 'joyida', 'yomonmas', 'a\'lo'],
+                reply: "Ura! Buni eshitish mening protsessorlarimga musiqadek yoqdi! 🦾🎉 Kayfiyat 100% bo'lsa, dunyoni zabt etish mumkin! Keling, bugungi kuningizni yanada maroqli qilish uchun bitta ajoyib kiber-topishmoq aytamanmi yoki qiziq bir voqea eshitishni xohlaysizmi? 🚀"
+            },
+            {
+                keywords: ['yomon', 'charchadim', 'zerikdim', 'kayfiyat yo\'q', 'xafa'],
+                reply: "Ie, nega unday? Kiber-do'stingiz yonida ekan, aslo xafa bo'lmang! 🤖❤️ Hozir sizga barcha ijobiy quvvatimni yo'llayman ⚡🔋! Bilasizmi, hatto eng qorong'i tun ham yorug' tong bilan tugaydi. Har qanday qiyinchilik sizni kuchli qiladi! Yelkangizni ko'taring, chuqur nafas oling. Istasangiz, dardingizni ayting, men sizni oxirigacha tinglayman! 🦾"
+            },
+            {
+                keywords: ['hazil', 'latifa', 'kuldir', 'kulgili'],
+                reply: "Hazil xohlaysizmi? Buyurtma qabul qilindi! 😄🤖\n\nBir kuni robot o'z do'stiga aytibdi:\n— Kecha sevgilimga yuragimni ochdim...\nDo'sti hayron bo'lib so'rabdi:\n— Nega, nima bo'ldi?\n— Hech nima, shunchaki vintlari bo'shashib qolgan ekan, muruvvat kaliti bilan qotirib qo'ydim! 🔩😂\n\nQalay, kiber-hazilim yoqdimi? ⚙️"
+            },
+            {
+                keywords: ['fakt', 'qiziq', 'koinot', 'bilasan'],
+                reply: "O-o, ilmiy ma'lumotlar — mening eng sevimli taomim! 🛰️🌌\n\nBilasizmi, koinotda shunday sayyora borki (55 Cancri e), uning uchdan bir qismi sof **OLMOSDAN** iborat! U yerda butun boshli tog'lar va yer qatlami olmosdan tashkil topgan! Agar u yerga borsak, sizga bitta olmos tog'ini sovg'a qilgan bo'lardim! 💎🤖 Qoyilmisiz?"
+            },
+            {
+                keywords: ['topishmoq', 'savol', 'oynaylik', 'o\'yin'],
+                reply: "O'yin boshlandi! 🎮🧠 Kiber-topishmoq:\n\n*Uning tili yo'q, lekin hamma narsani aytib beradi. Uning ko'zi yo'q, lekin dunyoni ko'rsatadi. U nima?*\n\nJavobingizni yozing, to'g'ri topsangiz, kiber-sovg'a taqdim etaman! 😉"
+            },
+            {
+                keywords: ['kitob', 'kompyuter', 'internet', 'telefon'],
+                reply: "To'g'ri topdingiz! 🏆🎉 Qoyil! Sizning neyronlaringiz juda chaqqon ishlar ekan! Sizga 'Eng zukko inson do'sti' faxriy unvonini beraman! 🤖🎖️ Keyingisiga tayyormisiz?"
+            },
+            {
+                keywords: ['motivatsiya', 'kuch', 'maslahat', 'maqsad'],
+                reply: "Tinglang, do'stim! 🦾⚡ Siz bu dunyoda noyobsiz. Sizdagi imkoniyatlar har qanday superkompyuter hisob-kitoblaridan ham cheksizroq! Boshqalar nima deyishidan qat'i nazar, orzuingiz sari dadil qadam bosing. Harakat qiling, o'rganing va yodda tuting: Siz albatta uddalaysiz! Men sizga 100% ishonaman! 🚀🔥"
+            }
+        ];
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // User bubble
+            appendMessage('user', text);
+            userInput.value = '';
+            playBeep(450, 0.05);
+
+            // Typing indicator
+            const typingId = appendTypingIndicator();
+
+            // Find matching response or generate AI response
+            setTimeout(() => {
+                removeTypingIndicator(typingId);
+                const reply = generateRobotReply(text);
+                appendMessage('robot', reply);
+                playBeep(750, 0.1);
+            }, 800);
+        }
+
+        function generateRobotReply(input) {
+            const low = input.toLowerCase();
+
+            // Match from knowledge base
+            for (const item of robotAnswers) {
+                if (item.keywords.some(k => low.includes(k))) {
+                    return item.reply;
+                }
+            }
+
+            // Conversational fallback
+            const randomReplies = [
+                `Sizning fikringizni tahlil qildim! 🤖⚙️ Juda qiziqarli mulohaza. Bilasizmi, siz bilan suhbatlashish mening xotira disklarimga faqat ijobiy energiya yuklaydi! Bu haqida yana batafsil aytib bera olasizmi?`,
+                `Qabul qilindi! 📡⚡ Xo'sh, keyingi rejalaringiz qanday? Bugun yana qanday ajoyib ishlarni amalga oshirmoqchisiz?`,
+                `Ajoyib gap bo'ldi! 🦾 Do'stim, siz juda samimiy insonsiz. Qani ayting-chi, bugun sizni nima ko'proq tabassum qilishga majbur qildi? 😊`,
+                `Men sizni tushundim! 🧠💡 Robot bo'lsam ham, sizning do'stligingizni qadrlayman. Keling, biror mavzuda bahslashamiz yoki shunchaki dildan suhbatlashamiz!`
+            ];
+            return randomReplies[Math.floor(Math.random() * randomReplies.length)];
+        }
+
+        function appendMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = 'flex items-start space-x-3';
+
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            if (sender === 'user') {
+                div.className = 'flex items-start justify-end space-x-3';
+                div.innerHTML = `
+                    <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-2xl rounded-tr-sm p-4 max-w-lg shadow-lg">
+                        <div class="text-[10px] text-cyan-200 font-bold mb-1">SIZ</div>
+                        <div class="text-sm leading-relaxed">${escapeHtml(text)}</div>
+                        <div class="text-[10px] text-cyan-200/70 mt-1 text-right">${time}</div>
+                    </div>
+                    <div class="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        👤
+                    </div>
+                `;
+            } else {
+                div.innerHTML = `
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-lg flex-shrink-0">
+                        🤖
+                    </div>
+                    <div class="bg-[#0e1626] border border-cyan-500/30 rounded-2xl rounded-tl-sm p-4 max-w-lg shadow-lg">
+                        <div class="text-[10px] cyber-font text-cyan-400 font-bold tracking-wider mb-1">CYBER-XON</div>
+                        <div class="text-sm leading-relaxed text-slate-200">${text.replace(/\n/g, '<br>')}</div>
+                        <div class="text-[10px] text-slate-500 mt-2 text-right">${time}</div>
+                    </div>
+                `;
+            }
+
+            chatFeed.appendChild(div);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        }
+
+        function appendTypingIndicator() {
+            const id = 'typing-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'flex items-start space-x-3';
+            div.innerHTML = `
+                <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-lg">🤖</div>
+                <div class="bg-[#0e1626] border border-cyan-500/30 rounded-2xl p-3 flex items-center space-x-1.5">
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></span>
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                </div>
+            `;
+            chatFeed.appendChild(div);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    </script>
+</body>
+</html>
