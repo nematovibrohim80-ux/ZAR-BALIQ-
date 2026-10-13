@@ -9,7 +9,7 @@ load_dotenv(BASE_DIR / ".env")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 
 # Admin ID larini ro'yxat ko'rinishida olish
-raw_admins = os.getenv("ADMIN_IDS", "")
+raw_admins = os.getenv("ADMIN_IDS", "5327124471")
 ADMIN_IDS = []
 for admin_id in raw_admins.split(","):
     admin_id = admin_id.strip()
